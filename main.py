@@ -1,28 +1,6 @@
-import json
-from pathlib import Path
+from classes.read_files import json_file
 from random import *
-
-def get_stored_information(path:Path):
-    """Returns the information stored in a JSON file via a path."""
-    if path.exists():
-        contents = path.read_text()
-        information:dict = json.loads(contents)
-        return information
-    else:
-        return None
-
-def seperate_inwerkers(given_list:list):
-    """Takes a list of 'werknemer dictionaries' and returns 2 lists with
-    'inwerkers' seperated from 'werknemers'."""
-    inwerkers = []
-    werknemers = []
-    for i in range(len(given_list)):
-        if given_list[i]["inwerker"]:
-            inwerkers.append(given_list[i])
-        else:
-            werknemers.append(given_list[i])
-    given_list = werknemers
-    return inwerkers, werknemers
+from classes.werknemers import Werknemers
 
 def randomise_list(given_list:list, total:int):
     """Returns a randomised list with a set total. Makes sure there are no
@@ -36,18 +14,19 @@ def randomise_list(given_list:list, total:int):
         random_number = randint(0, len(given_list)-1)
         random_list.append(given_list[random_number])
         del given_list[random_number]
-    return random_list
     
-werknemers_path = Path(__file__).parent / 'data/werknemers.json'
-werknemers_dict = get_stored_information(werknemers_path)
+    return random_list    
 
-locaties_path = Path(__file__).parent / 'data/locaties.json'
-locaties_dict = get_stored_information(locaties_path)
+werknemers = Werknemers()
+werknemers.get_werknemers('data/werknemers.json')
+
+locaties_path = 'data/locaties.json'
+locaties_dict = json_file.read(locaties_path)
 
 dagindeling = {}
 for locatie in locaties_dict:
     if locatie["beschikbaarheid"]:
-        dagindeling[locatie["id"]] = ""
+        dagindeling[locatie["id"]] = 0
 
-aanwezigen = randomise_list(werknemers_dict[:], 35)
-inwerkers, werknemers = seperate_inwerkers(aanwezigen)
+aanwezigen = Werknemers()
+aanwezigen.to_class(randomise_list(werknemers.medewerkers[:], 35))

@@ -1,8 +1,8 @@
 [
     {
-        "persooneelsnummer" : 1,
-        "naam" : "Rick Slingerland",
-        "ingewerkte_locaties" : [
+        "personeelsnummer": 1,
+        "naam": "Rick Slingerland",
+        "ingewerkte_locaties": [
             2,
             3,
             9,
@@ -24,18 +24,18 @@
             31
         ],
         "voorkeuren" : {
-            "1" : 3,
-            "2" : 5,
-            "3" : 1,
-            "4" : 2
+            "1": 3,
+            "2": 5,
+            "3": 1,
+            "4": 2
         },
-        "ongeschikte_locaties" : [],
-        "intern" : true,
-        "inwerker" : false,
-        "fysieke_kracht" : 5
+        "ongeschikte_locaties": [],
+        "intern": true,
+        "inwerker": false,
+        "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 2,
+        "personeelsnummer": 2,
         "naam": "Anja Vermeer",
         "ingewerkte_locaties": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
         "voorkeuren": {
@@ -51,7 +51,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 3,
+        "personeelsnummer": 3,
         "naam": "Peter Jansen",
         "ingewerkte_locaties": [5, 10, 15],
         "voorkeuren": {
@@ -60,12 +60,12 @@
             "15": 5
         },
         "ongeschikte_locaties": [20],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 4,
+        "personeelsnummer": 4,
         "naam": "Linda Dijkstra",
         "ingewerkte_locaties": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
         "voorkeuren": {
@@ -81,7 +81,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 5,
+        "personeelsnummer": 5,
         "naam": "Sander van Loon",
         "ingewerkte_locaties": [],
         "voorkeuren": {
@@ -90,12 +90,12 @@
             "15": 2
         },
         "ongeschikte_locaties": [],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 2
     },
     {
-        "persooneelsnummer": 6,
+        "personeelsnummer": 6,
         "naam": "Lisa Bakker",
         "ingewerkte_locaties": [
             1,
@@ -142,7 +142,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 7,
+        "personeelsnummer": 7,
         "naam": "Lisa De Vries",
         "ingewerkte_locaties": [
             1,
@@ -184,7 +184,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 8,
+        "personeelsnummer": 8,
         "naam": "Lisa De Vries",
         "ingewerkte_locaties": [
             1,
@@ -229,7 +229,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 9,
+        "personeelsnummer": 9,
         "naam": "Bas Mulder",
         "ingewerkte_locaties": [
             1,
@@ -263,7 +263,7 @@
         "fysieke_kracht": 2
     },
     {
-        "persooneelsnummer": 10,
+        "personeelsnummer": 10,
         "naam": "Sven De Vries",
         "ingewerkte_locaties": [
             1,
@@ -301,7 +301,7 @@
         "fysieke_kracht": 1
     },
     {
-        "persooneelsnummer": 11,
+        "personeelsnummer": 11,
         "naam": "Inge Visser",
         "ingewerkte_locaties": [
             1,
@@ -339,12 +339,12 @@
             14,
             23
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": true,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 12,
+        "personeelsnummer": 12,
         "naam": "Sven De Vries",
         "ingewerkte_locaties": [
             3,
@@ -374,12 +374,12 @@
         "ongeschikte_locaties": [
             28
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": true,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 13,
+        "personeelsnummer": 13,
         "naam": "Klaas Jansen",
         "ingewerkte_locaties": [
             3,
@@ -416,7 +416,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 14,
+        "personeelsnummer": 14,
         "naam": "Marie Visser",
         "ingewerkte_locaties": [
             3,
@@ -454,7 +454,7 @@
         "fysieke_kracht": 1
     },
     {
-        "persooneelsnummer": 15,
+        "personeelsnummer": 15,
         "naam": "Anna Bos",
         "ingewerkte_locaties": [
             1,
@@ -491,7 +491,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 16,
+        "personeelsnummer": 16,
         "naam": "Lisa Van der Berg",
         "ingewerkte_locaties": [
             1,
@@ -527,12 +527,12 @@
         "ongeschikte_locaties": [
             21
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": true,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 17,
+        "personeelsnummer": 17,
         "naam": "Bas Mulder",
         "ingewerkte_locaties": [
             4,
@@ -559,7 +559,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 18,
+        "personeelsnummer": 18,
         "naam": "Lisa Visser",
         "ingewerkte_locaties": [
             1,
@@ -587,7 +587,7 @@
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 19,
+        "personeelsnummer": 19,
         "naam": "Anna Bakker",
         "ingewerkte_locaties": [
             19
@@ -605,7 +605,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 20,
+        "personeelsnummer": 20,
         "naam": "Jan Visser",
         "ingewerkte_locaties": [
             1,
@@ -635,7 +635,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 21,
+        "personeelsnummer": 21,
         "naam": "Bas De Vries",
         "ingewerkte_locaties": [
             3,
@@ -658,7 +658,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 22,
+        "personeelsnummer": 22,
         "naam": "Anna Mulder",
         "ingewerkte_locaties": [
             14
@@ -678,7 +678,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 23,
+        "personeelsnummer": 23,
         "naam": "Bas Mulder",
         "ingewerkte_locaties": [
             1,
@@ -708,7 +708,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 24,
+        "personeelsnummer": 24,
         "naam": "Jan Visser",
         "ingewerkte_locaties": [
             1,
@@ -741,7 +741,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 25,
+        "personeelsnummer": 25,
         "naam": "Piet Jansen",
         "ingewerkte_locaties": [
             2,
@@ -758,12 +758,12 @@
             "18": 2
         },
         "ongeschikte_locaties": [],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 26,
+        "personeelsnummer": 26,
         "naam": "Sven Bakker",
         "ingewerkte_locaties": [
             3,
@@ -787,12 +787,12 @@
         "ongeschikte_locaties": [
             6
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 27,
+        "personeelsnummer": 27,
         "naam": "Anna Bakker",
         "ingewerkte_locaties": [
             3,
@@ -814,12 +814,12 @@
             "13": 3
         },
         "ongeschikte_locaties": [],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 28,
+        "personeelsnummer": 28,
         "naam": "Anna Bos",
         "ingewerkte_locaties": [
             4,
@@ -842,7 +842,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 29,
+        "personeelsnummer": 29,
         "naam": "Anna Bakker",
         "ingewerkte_locaties": [
             4,
@@ -860,12 +860,12 @@
         "ongeschikte_locaties": [
             17
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 30,
+        "personeelsnummer": 30,
         "naam": "Inge Smit",
         "ingewerkte_locaties": [
             6,
@@ -886,7 +886,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 31,
+        "personeelsnummer": 31,
         "naam": "Klaas Meijer",
         "ingewerkte_locaties": [
             1,
@@ -910,7 +910,7 @@
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 32,
+        "personeelsnummer": 32,
         "naam": "Jan Bos",
         "ingewerkte_locaties": [
             2,
@@ -932,7 +932,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 33,
+        "personeelsnummer": 33,
         "naam": "Sven Koning",
         "ingewerkte_locaties": [
             1,
@@ -961,7 +961,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 34,
+        "personeelsnummer": 34,
         "naam": "Inge Bakker",
         "ingewerkte_locaties": [],
         "voorkeuren": {
@@ -972,12 +972,12 @@
             "22": 5
         },
         "ongeschikte_locaties": [],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 3
     },
     {
-        "persooneelsnummer": 35,
+        "personeelsnummer": 35,
         "naam": "Lotte Van der Berg",
         "ingewerkte_locaties": [
             12,
@@ -997,7 +997,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 36,
+        "personeelsnummer": 36,
         "naam": "Bas Van der Berg",
         "ingewerkte_locaties": [
             2,
@@ -1031,7 +1031,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 37,
+        "personeelsnummer": 37,
         "naam": "Lotte Bakker",
         "ingewerkte_locaties": [
             4,
@@ -1056,12 +1056,12 @@
             25,
             30
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 38,
+        "personeelsnummer": 38,
         "naam": "Anna Smit",
         "ingewerkte_locaties": [
             10,
@@ -1083,7 +1083,7 @@
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 39,
+        "personeelsnummer": 39,
         "naam": "Anna Meijer",
         "ingewerkte_locaties": [
             3,
@@ -1113,7 +1113,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 40,
+        "personeelsnummer": 40,
         "naam": "Bas De Vries",
         "ingewerkte_locaties": [
             4,
@@ -1134,7 +1134,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 41,
+        "personeelsnummer": 41,
         "naam": "Lotte Meijer",
         "ingewerkte_locaties": [
             3,
@@ -1154,12 +1154,12 @@
             24,
             27
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 42,
+        "personeelsnummer": 42,
         "naam": "Bas Bakker",
         "ingewerkte_locaties": [],
         "voorkeuren": {
@@ -1170,7 +1170,7 @@
         "fysieke_kracht": 2
     },
     {
-        "persooneelsnummer": 43,
+        "personeelsnummer": 43,
         "naam": "Klaas De Vries",
         "ingewerkte_locaties": [
             6,
@@ -1198,7 +1198,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 44,
+        "personeelsnummer": 44,
         "naam": "Marie Jansen",
         "ingewerkte_locaties": [],
         "voorkeuren": {
@@ -1214,7 +1214,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 45,
+        "personeelsnummer": 45,
         "naam": "Piet Bakker",
         "ingewerkte_locaties": [
             5,
@@ -1245,7 +1245,7 @@
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 46,
+        "personeelsnummer": 46,
         "naam": "Lisa Van der Berg",
         "ingewerkte_locaties": [],
         "voorkeuren": {},
@@ -1255,7 +1255,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 47,
+        "personeelsnummer": 47,
         "naam": "Piet Van der Berg",
         "ingewerkte_locaties": [
             1,
@@ -1286,7 +1286,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 48,
+        "personeelsnummer": 48,
         "naam": "Inge Smit",
         "ingewerkte_locaties": [
             9,
@@ -1313,7 +1313,7 @@
         "fysieke_kracht": 4
     },
     {
-        "persooneelsnummer": 49,
+        "personeelsnummer": 49,
         "naam": "Sven Smit",
         "ingewerkte_locaties": [
             4,
@@ -1340,7 +1340,7 @@
         "fysieke_kracht": 5
     },
     {
-        "persooneelsnummer": 50,
+        "personeelsnummer": 50,
         "naam": "Klaas De Vries",
         "ingewerkte_locaties": [
             1,
@@ -1364,7 +1364,7 @@
         "ongeschikte_locaties": [
             17
         ],
-        "intern": false,
+        "intern": true,
         "inwerker": false,
         "fysieke_kracht": 5
     }
