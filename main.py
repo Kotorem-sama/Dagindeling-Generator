@@ -1,6 +1,7 @@
 from classes.read_files import json_file
-from random import *
 from classes.werknemers import Werknemers
+from classes.locaties import locaties
+from random import *
 
 def randomise_list(given_list:list, total:int):
     """Returns a randomised list with a set total. Makes sure there are no
@@ -15,18 +16,13 @@ def randomise_list(given_list:list, total:int):
         random_list.append(given_list[random_number])
         del given_list[random_number]
     
-    return random_list    
+    return random_list
 
-werknemers = Werknemers()
-werknemers.get_werknemers('data/werknemers.json')
+werknemers = Werknemers('data/werknemers.json')
+werknemers.save_to_file()
 
-locaties_path = 'data/locaties.json'
-locaties_dict = json_file.read(locaties_path)
-
-dagindeling = {}
-for locatie in locaties_dict:
-    if locatie["beschikbaarheid"]:
-        dagindeling[locatie["id"]] = 0
+locatie_list = locaties('data/locaties.json')
+locatie_list.save_to_file()
 
 aanwezigen = Werknemers()
 aanwezigen.to_class(randomise_list(werknemers.medewerkers[:], 35))

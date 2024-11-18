@@ -1,56 +1,100 @@
 from .read_files import json_file as jf
 
 class Werknemers:
-    def __init__(self):
+    def __init__(self, path=""):
         self.interne_medewerkers = []
         self.externe_medewerkers = []
         self.inwerkers = []
         self.medewerkers = []
+        self.path = path
+        if path:
+            self.retreive_from_file()
 
-    def add_inwerker(self, inwerker):
+    def save_to_file(self):
+        """If the instance has a path bound to it, it will save the data
+        of the instance to that file."""
+
+        if self.path:
+            werknemers_list = self.to_list()
+            jf.write(self.path, werknemers_list)
+
+    def retreive_from_file(self):
+        """If the instance has a path bound to it, it will retreive the data
+        of the file to the instance."""
+
+        if self.path:
+            werknemers_list = jf.read(self.path)
+            if werknemers_list:
+                self.to_class(werknemers_list)
+
+    def add_inwerker(self, inwerker, save_file=False):
+        """Adds an inwerker to the medewerker instance. Takes either
+        a dictionary or an inwerker and adds it to both the inwerkers list
+        and the full list of medewerkers. By default doesn't save to the file
+        if it has one, but if specified that it must be saved, it will
+        be saved."""
+
         if type(inwerker) == dict:
-            inwerker = [inwerker]
-        if type(inwerker) == list:
-            for i in inwerker:
-                new_inwerker = Inwerker()
-                new_inwerker.to_class(i)
-                self.inwerkers.append(new_inwerker)
-                self.medewerkers.append(new_inwerker)
+            new_inwerker = Inwerker()
+            new_inwerker.to_class(inwerker)
+
+            self.inwerkers.append(new_inwerker)
+            self.medewerkers.append(new_inwerker)
+
         elif type(inwerker) == Inwerker:
             self.inwerkers.append(inwerker)
             self.medewerkers.append(inwerker)
+        
+        if save_file:
+            self.save_to_file()
 
-    def add_interne_medewerker(self, intern):
+    def add_interne_medewerker(self, intern, save_file=False):
+        """Adds an interne medewerker to the medewerker instance. Takes
+        either a dictionary or an interne_medewerker and adds it to
+        both the interne_medewerkers list and the full list of medewerkers.
+        By default doesn't save to the file if it has one, but if specified
+        that it must be saved, it will be saved."""
+
         if type(intern) == dict:
-            intern = [intern]
-        if type(intern) == list:
-            for i in intern:
-                new_werknemer = Intern_medewerker()
-                new_werknemer.to_class(i)
-                self.interne_medewerkers.append(new_werknemer)
-                self.medewerkers.append(new_werknemer)
+            new_werknemer = Intern_medewerker()
+            new_werknemer.to_class(intern)
+
+            self.interne_medewerkers.append(new_werknemer)
+            self.medewerkers.append(new_werknemer)
+
         elif type(intern) == Intern_medewerker:
             self.interne_medewerkers.append(intern)
             self.medewerkers.append(intern)
+        
+        if save_file:
+            self.save_to_file()
 
-    def add_externe_medewerker(self, extern):
+    def add_externe_medewerker(self, extern, save_file=False):
+        """Adds an externe medewerker to the medewerker instance. Takes
+        either a dictionary or an externe_medewerker and adds it to
+        both the externe_medewerkers list and the full list of medewerkers.
+        By default doesn't save to the file if it has one, but if specified
+        that it must be saved, it will be saved."""
+
         if type(extern) == dict:
-            extern = [extern]
-        if type(extern) == list:
-            for i in extern:
-                new_extern = Extern_medewerker()
-                new_extern.to_class(i)
-                self.externe_medewerkers.append(new_extern)
-                self.medewerkers.append(new_extern)
+            new_extern = Extern_medewerker()
+            new_extern.to_class(extern)
+
+            self.externe_medewerkers.append(new_extern)
+            self.medewerkers.append(new_extern)
+
         elif type(extern) == Extern_medewerker:
             self.externe_medewerkers.append(extern)
             self.medewerkers.append(extern)
+        
+        if save_file:
+            self.save_to_file()
 
-    def get_werknemers(self, path):
-        werknemers_dict = jf.read(path)
-        self.to_class(werknemers_dict)
-
-    def to_class(self, werknemers):
+    def to_class(self, werknemers:list):
+        """Is used to add a list of dictionaries or a list of
+        Extern_medewerker, Intern_medewerker or Inwerker through
+        the add functions."""
+        
         for i in werknemers:
             if type(i) == dict:
                 if not i["intern"]:
@@ -67,6 +111,12 @@ class Werknemers:
                 elif type(i) == Intern_medewerker:
                     self.add_interne_medewerker(i)
 
+    def to_list(self):
+        """Returns a list with dictionaries to make saving to json files
+        easier."""
+
+        return [medewerker.to_dict() for medewerker in self.medewerkers]
+
     def to_inwerker(self):
         pass
 
@@ -78,7 +128,7 @@ class Werknemers:
 
 class medewerker_format:
     def __init__(self, intern, inwerker):
-        """Initialise werknemer class."""
+        """Initialise werknemer_format class."""
         self.personeelsnummer = self.get_new_personeelsnummer()
         self.naam = ""
         self.ingewerkte_locaties = [] # List of locations the employee is trained for
@@ -89,8 +139,11 @@ class medewerker_format:
         self.fysieke_kracht = 5  # Integer representing physical strength level
     
     def get_new_personeelsnummer(self):
-        werknemers_dict = jf.read('data/werknemers.json')
-        return (werknemers_dict[-1]["personeelsnummer"] + 1)
+        werknemers_list = jf.read('data/werknemers.json')
+        if werknemers_list:
+            return (werknemers_list[-1]["personeelsnummer"] + 1)
+        else:
+            return 1
     
     def to_class(self, dictionary:dict):
         self.personeelsnummer = dictionary.get('personeelsnummer', self.personeelsnummer)
@@ -110,7 +163,7 @@ class medewerker_format:
             "intern": self.intern,
             "inwerker": self.inwerker,
             "fysieke_kracht": self.fysieke_kracht
-            }
+        }
 
 class Intern_medewerker(medewerker_format):
     def __init__(self):
