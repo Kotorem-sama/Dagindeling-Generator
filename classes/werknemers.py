@@ -1,4 +1,5 @@
 from .read_files import json_file as jf
+from .read_files import csv_file as csv
 
 class Werknemers:
     def __init__(self, path=""):
@@ -17,6 +18,8 @@ class Werknemers:
         if self.path:
             werknemers_list = self.to_list()
             jf.write(self.path, werknemers_list)
+            # Niet uitvoeren totdat de ingewerkte locaties worden opgeslagen
+            # in het csv bestand
 
     def retreive_from_file(self):
         """If the instance has a path bound to it, it will retreive the data
@@ -89,6 +92,17 @@ class Werknemers:
         
         if save_file:
             self.save_to_file()
+
+    def add_ingewerkte_locaties(self):
+        rows = csv.read(self.path)
+        rows[1:]
+        for row in rows:
+            pass
+            # Eerst het personeelsnummer matchen met lijst en dan tellen waar
+            # in de lijst de x's zitten. Dan bij ingewerktelocaties dat nummer
+            # toevoegen. Let op. Beide aan de volledige lijst toevoegen en
+            # specifieke lijsten.
+            
 
     def to_class(self, werknemers:list):
         """Is used to add a list of dictionaries or a list of
