@@ -1,4 +1,5 @@
 from pathlib import Path
+import csv
 import json
 
 class json_file:
@@ -18,3 +19,19 @@ class json_file:
         if new_path.exists():
             data = json.dumps(information)
             new_path.write_text(data)
+
+class csv_file:
+    def read(path:str):
+        new_path = Path(__file__).parent.parent / path
+        if new_path.exists():
+            with new_path.open("r", encoding="utf-8") as file:
+                reader = csv.reader(file, delimiter=';')
+                return [row for row in reader if row]
+
+    def write(path:str, information:list):
+        new_path = Path(__file__).parent.parent / path
+        new_path.parent.mkdir(exist_ok=True)
+        with new_path.open("w", encoding="utf-8") as file:
+            writer = csv.writer(file, delimiter=';')
+            for info in information:
+                    writer.writerow(info)
