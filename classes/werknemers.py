@@ -17,6 +17,8 @@ class Werknemers:
 
         if self.path:
             self.sort("personeelsnummer")
+            self.reverse()
+            
             werknemers_list = self.to_list()
             locatie_list = Locaties('data/locaties.json')
 
@@ -172,6 +174,8 @@ class Ingeplanden(Werknemers):
 
         if self.path:
             self.sort("personeelsnummer")
+            self.reverse()
+
             werknemers_list = self.to_list()
             for i in werknemers_list:
                 i.pop('ingewerkte_locaties')

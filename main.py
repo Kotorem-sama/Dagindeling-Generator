@@ -1,6 +1,7 @@
 from classes.read_files import csv_file
 from classes.werknemers import Werknemers, Ingeplanden
 from classes.locaties import Locaties
+from modules.dagindeling_generator import generator
 from random import *
 
 def randomise_list(given_list:list, total:int):
@@ -22,12 +23,9 @@ werknemers = Werknemers()
 werknemers.save_to_file()
 
 locatie_list = Locaties('data/locaties.json')
-# locatie_list.save_to_file()
+locatie_list.save_to_file()
 
 aanwezigen = Ingeplanden("Vandaag.json")
 aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 35))
+generator(aanwezigen, locatie_list)
 # aanwezigen.save_to_file()
-
-aanwezigen.sort("inwerk_probability")
-for i in aanwezigen.medewerkers:
-    print(i.naam, i.inwerk_probability)

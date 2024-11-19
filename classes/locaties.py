@@ -36,6 +36,7 @@ class Locaties:
 
         if self.path:
             self.sort("id")
+            self.reverse()
             locaties_list = self.to_list()
             jf.write(self.path, locaties_list)
 
