@@ -1,6 +1,6 @@
 from .read_files import json_file as jf
 
-class locaties:
+class Locaties:
     def __init__(self, path:str):
         self.gesloten_locaties = []
         self.open_locaties = []

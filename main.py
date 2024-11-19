@@ -1,6 +1,6 @@
 from classes.read_files import csv_file
 from classes.werknemers import Werknemers
-from classes.locaties import locaties
+from classes.locaties import Locaties
 from random import *
 
 def randomise_list(given_list:list, total:int):
@@ -19,11 +19,12 @@ def randomise_list(given_list:list, total:int):
     return random_list
 
 werknemers = Werknemers('data/werknemers.json')
-# werknemers.save_to_file()
+werknemers.save_to_file()
 
-# locatie_list = locaties('data/locaties.json')
+# locatie_list = Locaties('data/locaties.json')
 # locatie_list.save_to_file()
 
 # aanwezigen = Werknemers()
 # aanwezigen.to_class(randomise_list(werknemers.medewerkers[:], 35))
-
+# aanwezigen.path = 'data/aanwezigen/aanwezigen.json'
+# aanwezigen.save_to_file()

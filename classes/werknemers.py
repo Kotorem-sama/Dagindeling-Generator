@@ -1,5 +1,6 @@
 from .read_files import json_file as jf
 from .read_files import csv_file as csv
+from .locaties import Locaties
 
 class Werknemers:
     def __init__(self, path=""):
@@ -17,9 +18,22 @@ class Werknemers:
 
         if self.path:
             werknemers_list = self.to_list()
+            locatie_list = Locaties('data/locaties.json')
+
+            list = [[ "Personeelsnummer", "Naam" ]]
+            for i in locatie_list.locaties:
+                list[0].append(f"{i.naam} ({i.id})")
+            
+            for i in werknemers_list:
+                ingewerkte_locaties = i.pop('ingewerkte_locaties')
+                list.append([i['personeelsnummer'], i['naam']])
+                list[-1].extend(["x" if j in ingewerkte_locaties else ""
+                                for j in range(1,len(list[0])-1)])
+            print(werknemers_list)
             jf.write(self.path, werknemers_list)
-            # Niet uitvoeren totdat de ingewerkte locaties worden opgeslagen
-            # in het csv bestand
+            
+            if self.path.split('/')[-1] == "werknemers.json":
+                csv.write('data/ingewerkte_locaties.csv', list)
 
     def retreive_from_file(self):
         """If the instance has a path bound to it, it will retreive the data
@@ -91,18 +105,7 @@ class Werknemers:
             self.medewerkers.append(extern)
         
         if save_file:
-            self.save_to_file()
-
-    def add_ingewerkte_locaties(self):
-        rows = csv.read(self.path)
-        rows[1:]
-        for row in rows:
-            pass
-            # Eerst het personeelsnummer matchen met lijst en dan tellen waar
-            # in de lijst de x's zitten. Dan bij ingewerktelocaties dat nummer
-            # toevoegen. Let op. Beide aan de volledige lijst toevoegen en
-            # specifieke lijsten.
-            
+            self.save_to_file()            
 
     def to_class(self, werknemers:list):
         """Is used to add a list of dictionaries or a list of
@@ -152,6 +155,24 @@ class medewerker_format:
         self.inwerker = inwerker  # Boolean indicating if the employee is a trainer
         self.fysieke_kracht = 5  # Integer representing physical strength level
     
+    def get_ingewerkte_locaties(self, personeelsnummer:int):
+        rows = csv.read('data/ingewerkte_locaties.csv')
+        if not rows:
+            return []
+        
+        for row in rows[1:]:
+            if (int(row[0]) == personeelsnummer):
+                locaties:list = row[2:]
+                ingewerkte_locaties = []
+
+                while 'x' in locaties:
+                    x = locaties.index('x')
+                    ingewerkte_locaties.append(x+1)
+                    locaties[x] = ''
+                
+                return ingewerkte_locaties
+        return []
+
     def get_new_personeelsnummer(self):
         werknemers_list = jf.read('data/werknemers.json')
         if werknemers_list:
@@ -160,12 +181,17 @@ class medewerker_format:
             return 1
     
     def to_class(self, dictionary:dict):
-        self.personeelsnummer = dictionary.get('personeelsnummer', self.personeelsnummer)
+        self.personeelsnummer = dictionary.get('personeelsnummer',
+                                               self.personeelsnummer)
         self.naam = dictionary.get('naam', self.naam)
-        self.ingewerkte_locaties = dictionary.get('ingewerkte_locaties', self.ingewerkte_locaties)
+        self.ingewerkte_locaties = dictionary.get('ingewerkte_locaties',
+                                                  self.get_ingewerkte_locaties(
+                                                      self.personeelsnummer))
         self.voorkeuren = dictionary.get('voorkeuren', self.voorkeuren)
-        self.ongeschikte_locaties = dictionary.get('ongeschikte_locaties', self.ongeschikte_locaties)
-        self.fysieke_kracht = dictionary.get('fysieke_kracht', self.fysieke_kracht)
+        self.ongeschikte_locaties = dictionary.get('ongeschikte_locaties',
+                                                   self.ongeschikte_locaties)
+        self.fysieke_kracht = dictionary.get('fysieke_kracht',
+                                             self.fysieke_kracht)
 
     def to_dict(self):
         return {
