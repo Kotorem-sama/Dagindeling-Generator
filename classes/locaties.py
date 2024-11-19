@@ -28,12 +28,14 @@ class Locaties:
             self.gesloten_locaties.sort()
             self.open_locaties.sort()
             self.locaties.sort()
+            self.reverse()
 
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
         of the instance to that file."""
 
         if self.path:
+            self.sort("id")
             locaties_list = self.to_list()
             jf.write(self.path, locaties_list)
 

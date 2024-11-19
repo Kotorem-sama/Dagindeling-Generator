@@ -16,6 +16,7 @@ class Werknemers:
         of the instance to that file."""
 
         if self.path:
+            self.sort("personeelsnummer")
             werknemers_list = self.to_list()
             locatie_list = Locaties('data/locaties.json')
 
@@ -152,6 +153,7 @@ class Werknemers:
             self.externe_medewerkers.sort()
             self.inwerkers.sort()
             self.medewerkers.sort()
+            self.reverse()
 
     def reverse(self):
         self.interne_medewerkers.reverse()
@@ -169,6 +171,7 @@ class Ingeplanden(Werknemers):
         of the instance to that file."""
 
         if self.path:
+            self.sort("personeelsnummer")
             werknemers_list = self.to_list()
             for i in werknemers_list:
                 i.pop('ingewerkte_locaties')
@@ -317,11 +320,11 @@ class Extern_medewerker(medewerker_format):
     def get_inwerk_probability(self):
         if self.ingewerkte_locaties:
             return 0
-        return 100
+        return 100.0
 
 class Inwerker(medewerker_format):
     def __init__(self):
         super().__init__(True, True)
     
     def get_inwerk_probability(self):
-        return 0
+        return 0.0

@@ -3,6 +3,7 @@ from classes.locaties import Locaties
 
 def generator(ingeplanden:Ingeplanden, locaties:Locaties):
     locaties.sort("belang")
-    locaties.reverse()
-    priority = []
+    ingeplanden.sort("inwerk_probability")
+    priority = [i for i in ingeplanden.medewerkers
+                if i.inwerk_probability == 100]
     
