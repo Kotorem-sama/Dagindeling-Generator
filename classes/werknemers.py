@@ -3,14 +3,13 @@ from .read_files import csv_file as csv
 from .locaties import Locaties
 
 class Werknemers:
-    def __init__(self, path=""):
+    def __init__(self, path='data/werknemers.json'):
         self.interne_medewerkers = []
         self.externe_medewerkers = []
         self.inwerkers = []
         self.medewerkers = []
         self.path = path
-        if path:
-            self.retreive_from_file()
+        self.retreive_from_file()
 
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
@@ -29,11 +28,9 @@ class Werknemers:
                 list.append([i['personeelsnummer'], i['naam']])
                 list[-1].extend(["x" if j in ingewerkte_locaties else ""
                                 for j in range(1,len(list[0])-1)])
-            print(werknemers_list)
-            jf.write(self.path, werknemers_list)
             
-            if self.path.split('/')[-1] == "werknemers.json":
-                csv.write('data/ingewerkte_locaties.csv', list)
+            jf.write(self.path, werknemers_list)
+            csv.write('data/ingewerkte_locaties.csv', list)
 
     def retreive_from_file(self):
         """If the instance has a path bound to it, it will retreive the data
@@ -142,6 +139,21 @@ class Werknemers:
 
     def sort(self):
         pass
+
+class Ingeplanden(Werknemers):
+    def __init__(self, path=""):
+        super().__init__("data/ingeplanden/"+path)
+        self.absenten = []
+
+    def save_to_file(self):
+        """If the instance has a path bound to it, it will save the data
+        of the instance to that file."""
+
+        if self.path:
+            werknemers_list = self.to_list()
+            for i in werknemers_list:
+                i.pop('ingewerkte_locaties')
+            jf.write(self.path, werknemers_list)
 
 class medewerker_format:
     def __init__(self, intern, inwerker):
