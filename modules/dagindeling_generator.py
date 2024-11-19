@@ -51,7 +51,6 @@ def get_least_locations(possibilities:list):
     return possibilities[amount_list.index(min(amount_list))]
 
 def generator(ingeplanden:Ingeplanden, locations:Locaties):
-    locations.sort("belang")
     ingeplanden.sort("inwerk_probability")
     total_inwerkers = len(ingeplanden.inwerkers)
 
@@ -59,20 +58,38 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     for location in locations.open_locaties:
         dagindeling[location.id] = []
 
-    priority = [ i for i in ingeplanden.medewerkers if i.inwerk_probability
+    # Gets a list of all the new employees
+    priority_list = [ i for i in ingeplanden.medewerkers if i.inwerk_probability
                 == 100 and i not in ingeplanden.absenten ]
     
     # First fill the groups (beginner locations) with new employees
     for group in locations.groepen.values():
+        if priority_list:
+            total_inwerkers -= 1
         for location in group:
-            if not priority:
+            if not priority_list or dagindeling.get(location, "No") == "No":
                 break
-            employee = priority.pop(0)
+            employee = priority_list.pop(0)
+            ingeplanden.delete_werknemer(employee)
             dagindeling[location].append(employee)
+    
+    # If there's more new employees, the while loop will continue till every
+    # new employee has a spot.
+    locations.sort("moeilijkheidsgraad")
+    index = 0
+    while priority_list:
+        next_location = locations.open_locaties[index]
+        index += 1
 
-    # if priority:
-    #     locations.sort("moeilijkheidsgraad")
+        # If the dagindeling doesnt have any employees scheduled in
+        # the next location, it will add a new employee.
+        if len(dagindeling[next_location.id]) == 0:
+            total_inwerkers -= 1
+            employee = priority_list.pop(0)
+            ingeplanden.delete_werknemer(employee)
+            dagindeling[next_location.id].append(employee)
 
+    locations.sort("belang")
     for location in locations.open_locaties:
         minimum = location.minimale_medewerkers
         if len(dagindeling[location.id]) == minimum:
