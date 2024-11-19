@@ -44,6 +44,31 @@ class Werknemers:
             if werknemers_list:
                 self.to_class(werknemers_list)
 
+    def get_index_by_id(self, id, search_list):
+        for i in range(len(search_list)):
+            if id == search_list[i].personeelsnummer:
+                return i
+
+    def delete_werknemer(self, werknemer, save_file=False):
+        personeelsnummer = werknemer.personeelsnummer
+
+        if type(werknemer) == Inwerker:
+            del self.inwerkers[self.get_index_by_id(
+                personeelsnummer, self.inwerkers
+            )]
+        elif type(werknemer) == Intern_medewerker:
+            del self.interne_medewerkers[self.get_index_by_id(
+                personeelsnummer, self.interne_medewerkers
+            )]
+        else:
+            del self.externe_medewerkers[self.get_index_by_id(
+                personeelsnummer, self.externe_medewerkers
+            )]
+        
+        del self.medewerkers[self.get_index_by_id(
+            personeelsnummer, self.medewerkers
+        )]
+
     def add_inwerker(self, inwerker, save_file=False):
         """Adds an inwerker to the medewerker instance. Takes either
         a dictionary or an inwerker and adds it to both the inwerkers list

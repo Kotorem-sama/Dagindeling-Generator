@@ -26,5 +26,5 @@ locatie_list.save_to_file()
 
 aanwezigen = Ingeplanden("Vandaag.json")
 aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 20))
-generator(aanwezigen, locatie_list)
+# generator(aanwezigen, locatie_list)
 # aanwezigen.save_to_file()

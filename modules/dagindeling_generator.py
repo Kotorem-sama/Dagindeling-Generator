@@ -53,25 +53,40 @@ def get_least_locations(possibilities:list):
 def generator(ingeplanden:Ingeplanden, locations:Locaties):
     locations.sort("belang")
     ingeplanden.sort("inwerk_probability")
-    priority = [i for i in ingeplanden.medewerkers
-                if i.inwerk_probability == 100]
-    
+    total_inwerkers = len(ingeplanden.inwerkers)
+
     dagindeling = {}
     for location in locations.open_locaties:
         dagindeling[location.id] = []
 
+    priority = [ i for i in ingeplanden.medewerkers if i.inwerk_probability
+                == 100 and i not in ingeplanden.absenten ]
+    
+    # First fill the groups (beginner locations) with new employees
+    for group in locations.groepen.values():
+        for location in group:
+            if not priority:
+                break
+            employee = priority.pop(0)
+            dagindeling[location].append(employee)
+
+    # if priority:
+    #     locations.sort("moeilijkheidsgraad")
+
     for location in locations.open_locaties:
+        minimum = location.minimale_medewerkers
+        if len(dagindeling[location.id]) == minimum:
+            continue
+        
         possibilities = get_employees_per_location(location.id,
                                             ingeplanden.interne_medewerkers,
                                             ingeplanden.absenten)
         if not possibilities:
-            dagindeling[location.id] = ["0_ingewerkt"]
             continue
         
         lower_fysical_power = get_lower_fysical_power(possibilities, location)
         remaining = [i for i in possibilities if i not in lower_fysical_power]
         if not remaining:
-            dagindeling[location.id] = ["0_strong"]
             continue
         
         if len(remaining) > 1:
