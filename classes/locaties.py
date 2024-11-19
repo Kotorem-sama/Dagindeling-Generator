@@ -10,6 +10,20 @@ class Locaties:
         self.path = path
         self.retreive_from_file()
 
+    def set_sort_by(self, to_set, key):
+        for locatie in to_set:
+            locatie.sorted_by = key
+
+    def sort(self, key):
+        if key in ["moeilijkheidsgraad","id","fysieke_kracht","belang"]:
+            self.set_sort_by(self.gesloten_locaties, key)
+            self.set_sort_by(self.open_locaties, key)
+            self.set_sort_by(self.locaties, key)
+
+            self.gesloten_locaties.sort()
+            self.open_locaties.sort()
+            self.locaties.sort()
+
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
         of the instance to that file."""
@@ -104,6 +118,79 @@ class Locatie:
         self.beschikbaarheid = True
         self.belang = 1
         self.fysieke_kracht = 1
+        self.sorted_by = "id"
+
+    def __lt__(self, other):
+        if self.sorted_by == "id":
+            return self.id < other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad < other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang < other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht < other.fysieke_kracht
+        else:
+            raise ValueError
+
+    def __le__(self, other):
+        if self.sorted_by == "id":
+            return self.id <= other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad <= other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang <= other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht <= other.fysieke_kracht
+        else:
+            raise ValueError
+
+    def __eq__(self, other):
+        if self.sorted_by == "id":
+            return self.id == other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad == other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang == other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht == other.fysieke_kracht
+        else:
+            raise ValueError
+
+    def __ne__(self, other):
+        if self.sorted_by == "id":
+            return self.id != other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad != other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang != other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht != other.fysieke_kracht
+        else:
+            raise ValueError
+
+    def __gt__(self, other):
+        if self.sorted_by == "id":
+            return self.id > other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad > other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang > other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht > other.fysieke_kracht
+        else:
+            raise ValueError
+
+    def __ge__(self, other):
+        if self.sorted_by == "id":
+            return self.id >= other.id
+        elif self.sorted_by == "moeilijkheidsgraad":
+            return self.moeilijkheidsgraad >= other.moeilijkheidsgraad
+        elif self.sorted_by == "belang":
+            return self.belang >= other.belang
+        elif self.sorted_by == "fysieke_kracht":
+            return self.fysieke_kracht >= other.fysieke_kracht
+        else:
+            raise ValueError
 
     def to_class(self, dictionary:dict):
         self.id = dictionary.get('id', self.id)

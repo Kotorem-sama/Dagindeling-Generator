@@ -220,6 +220,13 @@ class medewerker_format:
 class Intern_medewerker(medewerker_format):
     def __init__(self):
         super().__init__(True, False)
+        self.__pity = 0
+
+    def first_pick(self):
+        self.__pity = 0
+
+    def not_first_pick(self):
+        self.__pity += 1
 
     def get_inwerk_probability(self):
         amount_ingewerkt = len(self.ingewerkte_locaties)

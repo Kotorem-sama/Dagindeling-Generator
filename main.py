@@ -21,9 +21,9 @@ def randomise_list(given_list:list, total:int):
 werknemers = Werknemers()
 werknemers.save_to_file()
 
-# locatie_list = Locaties('data/locaties.json')
+locatie_list = Locaties('data/locaties.json')
 # locatie_list.save_to_file()
 
-aanwezigen = Ingeplanden("Vandaag.json")
-aanwezigen.to_class(randomise_list(werknemers.medewerkers[:], 35))
-aanwezigen.save_to_file()
+# aanwezigen = Ingeplanden("Vandaag.json")
+# aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 35))
+# aanwezigen.save_to_file()
