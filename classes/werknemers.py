@@ -137,8 +137,27 @@ class Werknemers:
     def to_intern(self):
         pass
 
-    def sort(self):
-        pass
+    def set_sort_by(self, to_set, key):
+        for locatie in to_set:
+            locatie.sorted_by = key
+
+    def sort(self, key):
+        if key in ["personeelsnummer", "inwerk_probability"]:
+            self.set_sort_by(self.interne_medewerkers, key)
+            self.set_sort_by(self.externe_medewerkers, key)
+            self.set_sort_by(self.inwerkers, key)
+            self.set_sort_by(self.medewerkers, key)
+
+            self.interne_medewerkers.sort()
+            self.externe_medewerkers.sort()
+            self.inwerkers.sort()
+            self.medewerkers.sort()
+
+    def reverse(self):
+        self.interne_medewerkers.reverse()
+        self.externe_medewerkers.reverse()
+        self.inwerkers.reverse()
+        self.medewerkers.reverse()
 
 class Ingeplanden(Werknemers):
     def __init__(self, path=""):
@@ -166,6 +185,8 @@ class medewerker_format:
         self.intern = intern  # Boolean indicating if the employee is internal
         self.inwerker = inwerker  # Boolean indicating if the employee is a trainer
         self.fysieke_kracht = 5  # Integer representing physical strength level
+        self.sorted_by = "personeelsnummer"
+        self.inwerk_probability = 0
     
     def get_ingewerkte_locaties(self, personeelsnummer:int):
         rows = csv.read('data/ingewerkte_locaties.csv')
@@ -204,6 +225,7 @@ class medewerker_format:
                                                    self.ongeschikte_locaties)
         self.fysieke_kracht = dictionary.get('fysieke_kracht',
                                              self.fysieke_kracht)
+        self.inwerk_probability = self.get_inwerk_probability()
 
     def to_dict(self):
         return {
@@ -216,6 +238,57 @@ class medewerker_format:
             "inwerker": self.inwerker,
             "fysieke_kracht": self.fysieke_kracht
         }
+    
+    def __lt__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer < other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability < other.inwerk_probability
+        else:
+            raise ValueError
+
+    def __le__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer <= other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability <= other.inwerk_probability
+        else:
+            raise ValueError
+
+    def __eq__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer == other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability == other.inwerk_probability
+        else:
+            raise ValueError
+
+    def __ne__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer != other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability != other.inwerk_probability
+        else:
+            raise ValueError
+
+    def __gt__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer > other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability > other.inwerk_probability
+        else:
+            raise ValueError
+
+    def __ge__(self, other):
+        if self.sorted_by == "personeelsnummer":
+            return self.personeelsnummer >= other.personeelsnummer
+        elif self.sorted_by == "inwerk_probability":
+            return self.inwerk_probability >= other.inwerk_probability
+        else:
+            raise ValueError
+
+    def get_inwerk_probability(self):
+        pass
 
 class Intern_medewerker(medewerker_format):
     def __init__(self):
@@ -229,13 +302,26 @@ class Intern_medewerker(medewerker_format):
         self.__pity += 1
 
     def get_inwerk_probability(self):
-        amount_ingewerkt = len(self.ingewerkte_locaties)
-        locaties_dict = jf.read('data/locaties.json')
+        locations = Locaties('data/locaties.json')
+
+        total_locations = len(locations.locaties)
+        locations_ingewerkt = len(self.ingewerkte_locaties)
+        locations_to_go = total_locations - locations_ingewerkt
+
+        return locations_to_go / total_locations * 100
 
 class Extern_medewerker(medewerker_format):
     def __init__(self):
         super().__init__(False, False)
+    
+    def get_inwerk_probability(self):
+        if self.ingewerkte_locaties:
+            return 0
+        return 100
 
 class Inwerker(medewerker_format):
     def __init__(self):
         super().__init__(True, True)
+    
+    def get_inwerk_probability(self):
+        return 0

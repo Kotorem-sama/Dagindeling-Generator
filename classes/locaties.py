@@ -14,7 +14,12 @@ class Locaties:
         for locatie in to_set:
             locatie.sorted_by = key
 
-    def sort(self, key):
+    def reverse(self):
+        self.gesloten_locaties.reverse()
+        self.open_locaties.reverse()
+        self.locaties.reverse()
+
+    def sort(self, key:str):
         if key in ["moeilijkheidsgraad","id","fysieke_kracht","belang"]:
             self.set_sort_by(self.gesloten_locaties, key)
             self.set_sort_by(self.open_locaties, key)
