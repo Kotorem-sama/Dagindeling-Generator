@@ -6,7 +6,6 @@ class Locaties:
         self.open_locaties = []
         self.locaties = []
         self.groepen = {}
-        self.afwisselende_locaties = {}
         self.path = path
         self.retreive_from_file()
 
@@ -102,14 +101,6 @@ class Locaties:
                 else:
                     self.groepen[locatie.groep] = [locatie.id]
 
-            # Adds location to the afwisselende_locaties dictionary if the location
-            # Is connected to other attractions.
-            if locatie.afwisselingsgroep > 0:
-                if self.afwisselende_locaties.get(locatie.afwisselingsgroep):
-                    self.afwisselende_locaties[locatie.afwisselingsgroep].append(locatie.id)
-                else:
-                    self.afwisselende_locaties[locatie.afwisselingsgroep] = locatie.id
-
     def to_list(self):
         return [locatie.to_dict() for locatie in self.locaties]
 
@@ -119,7 +110,6 @@ class Locatie:
         self.naam = ""
         self.categorie = categorie
         self.groep = ""
-        self.afwisselingsgroep = 0
         self.minimale_medewerkers = 1
         self.maximale_medewerkers = 1
         self.moeilijkheidsgraad = 1
@@ -204,7 +194,6 @@ class Locatie:
         self.id = dictionary.get('id', self.id)
         self.naam = dictionary.get('naam', self.naam)
         self.groep = dictionary.get('groep', self.groep)
-        self.afwisselingsgroep = dictionary.get("afwisseling", 0)
         self.minimale_medewerkers = dictionary.get('minimale_medewerkers', self.minimale_medewerkers)
         self.maximale_medewerkers = dictionary.get('maximale_medewerkers', self.maximale_medewerkers)
         self.moeilijkheidsgraad = dictionary.get('moeilijkheidsgraad', self.moeilijkheidsgraad)
@@ -218,7 +207,6 @@ class Locatie:
             "naam": self.naam,
             "categorie": self.categorie,
             "groep": self.groep,
-            "afwisseling": self.afwisselingsgroep,
             "minimale_medewerkers": self.minimale_medewerkers,
             "maximale_medewerkers": self.maximale_medewerkers,
             "moeilijkheidsgraad": self.moeilijkheidsgraad,

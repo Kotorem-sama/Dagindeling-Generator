@@ -26,7 +26,7 @@ def get_employees_per_location(locatie_id:int, search_list:list, absenten:list):
 
         return employees_per_location
 
-def get_employees_per_afwisseling(loc_ids:list, s_list:list, absenten:list):
+def get_employees_per_group(loc_ids:list, s_list:list, absenten:list):
     employees_per_locations = [ get_employees_per_location(locatie, s_list,
                                 absenten) for locatie in loc_ids ]
     employees_per_group = []
@@ -57,13 +57,8 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
                 if i.inwerk_probability == 100]
     
     dagindeling = {}
-    afwisselings_groups = []
     for location in locations.open_locaties:
         dagindeling[location.id] = []
-
-        if location.afwisseling > 0 and (
-            location.afwisseling not in afwisselings_groups):
-            afwisselings_groups.append(location.afwisseling)
 
     for location in locations.open_locaties:
         possibilities = get_employees_per_location(location.id,
