@@ -147,7 +147,8 @@ class Gesloten_Locaties_Frame:
         button.grid(row=1, column=1)
 
         # Button that removes from listbox
-        verwijderen_button = Button(self.frame, text="Verwijderen", command=remove)
+        verwijderen_button = Button(self.frame, text="Verwijderen",
+                                    command=remove)
         verwijderen_button.grid(row=1, column=2)
 
         # Creates frame for scrollable listbox
@@ -165,6 +166,11 @@ class Gesloten_Locaties_Frame:
             yscrollcommand=gesloten_locaties_scrollbar.set)
         gesloten_locaties_scrollbar.config(
             command=gesloten_locaties_listbox.yview)
+        
+        # Adds the already closed locations to the list
+        for locatie in locatie_list.gesloten_locaties:
+            self.gesloten_locaties.append(f"{locatie.naam} ({locatie.id})")
+            gesloten_locaties_listbox.insert(0, f"{locatie.naam} ({locatie.id})")
 
     def get(self):
         return self.gesloten_locaties
@@ -210,7 +216,8 @@ class Aanwezigen_Frame:
         toevoegen_button.grid(row=1, column=1)
 
         # Button that removes from listbox
-        verwijderen_button = Button(self.frame, text="Verwijderen", command=remove)
+        verwijderen_button = Button(self.frame, text="Verwijderen",
+                                    command=remove)
         verwijderen_button.grid(row=1, column=2)
 
         # Creates frame for scrollable listbox.
