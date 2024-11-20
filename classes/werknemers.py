@@ -52,6 +52,10 @@ class Werknemers:
     def delete_werknemer(self, werknemer, save_file=False):
         personeelsnummer = werknemer.personeelsnummer
 
+        del self.medewerkers[self.get_index_by_id(
+            personeelsnummer, self.medewerkers
+        )]
+
         if type(werknemer) == Inwerker:
             del self.inwerkers[self.get_index_by_id(
                 personeelsnummer, self.inwerkers
@@ -64,10 +68,6 @@ class Werknemers:
             del self.externe_medewerkers[self.get_index_by_id(
                 personeelsnummer, self.externe_medewerkers
             )]
-        
-        del self.medewerkers[self.get_index_by_id(
-            personeelsnummer, self.medewerkers
-        )]
 
     def add_inwerker(self, inwerker, save_file=False):
         """Adds an inwerker to the medewerker instance. Takes either

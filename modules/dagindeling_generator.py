@@ -77,7 +77,7 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     # new employee has a spot.
     locations.sort("moeilijkheidsgraad")
     index = 0
-    while priority_list:
+    while priority_list and index < len(locations.open_locaties):
         next_location = locations.open_locaties[index]
         index += 1
 
@@ -90,6 +90,20 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
             dagindeling[next_location.id].append(employee)
 
     locations.sort("belang")
+    index = 0
+    priority_list = [ i for i in ingeplanden.medewerkers if
+            i.inwerk_probability != 100 and i not in ingeplanden.absenten ]
+    while total_inwerkers > 0 and index < len(locations.open_locaties):
+
+        next_location = locations.open_locaties[index]
+        index += 1
+
+        if len(dagindeling[next_location.id]) < next_location.minimale_medewerkers:
+            total_inwerkers -= 1
+            employee = priority_list.pop(0)
+            ingeplanden.delete_werknemer(employee)
+            dagindeling[next_location.id].append(employee)
+
     for location in locations.open_locaties:
         minimum = location.minimale_medewerkers
         if len(dagindeling[location.id]) == minimum:
@@ -107,12 +121,9 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
             continue
         
         if len(remaining) > 1:
-            first_pick = get_least_locations(possibilities)
-            index = ingeplanden.interne_medewerkers.index(first_pick)
+            employee = get_least_locations(possibilities)
         else:
-            index = ingeplanden.interne_medewerkers.index(remaining[0])
+            employee = remaining[0]
         
-        employee = ingeplanden.interne_medewerkers.pop(index)
+        ingeplanden.delete_werknemer(employee)
         dagindeling[location.id].append(employee)
-    
-    print(len(ingeplanden.interne_medewerkers))
