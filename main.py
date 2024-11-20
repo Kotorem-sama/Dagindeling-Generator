@@ -25,6 +25,7 @@ werknemers = Werknemers()
 werknemers.save_to_file()
 
 locatie_list = Locaties('data/locaties.json')
+locatie_list.open_location(1)
 locatie_list.save_to_file()
 
 totaal = 0

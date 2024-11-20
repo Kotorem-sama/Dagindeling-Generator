@@ -67,14 +67,24 @@ class Gesloten_Locaties_Frame:
             value = gesloten_locaties_listbox.curselection()
             if value:
                 gesloten_locaties_listbox.delete(value)
-                self.gesloten_locaties.pop(value[0])
+                val = self.gesloten_locaties.pop(value[0])
+                
+                # Gets the id from the string and closes the attraction.
+                locatie_id = int(val.split()[-1].strip("(").strip(")"))
+                locatie_list.open_location(locatie_id)
+                locatie_list.save_to_file()
 
-        # Command for button to add items to listbox
+        # Command for button to add items to listbox.
         def get():
             value = search_gesloten_locaties.get()
             if value not in self.gesloten_locaties and value:
                 self.gesloten_locaties.insert(0, value)
                 gesloten_locaties_listbox.insert(0, value)
+                
+                # Gets the id from the string and closes the attraction.
+                locatie_id = int(value.split()[-1].strip("(").strip(")"))
+                locatie_list.close_location(locatie_id)
+                locatie_list.save_to_file()
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
@@ -103,7 +113,7 @@ class Gesloten_Locaties_Frame:
         
         # Adds the already closed locations to the list
         for locatie in locatie_list.gesloten_locaties:
-            self.gesloten_locaties.append(f"{locatie.naam} ({locatie.id})")
+            self.gesloten_locaties.insert(0, f"{locatie.naam} ({locatie.id})")
             gesloten_locaties_listbox.insert(0, f"{locatie.naam} ({locatie.id})")
 
     def get(self):

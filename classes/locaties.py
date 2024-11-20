@@ -9,6 +9,28 @@ class Locaties:
         self.path = path
         self.retreive_from_file()
 
+    def close_location(self, id:int):
+        for location in self.locaties:
+            if id == location.id:
+                location.beschikbaarheid = False
+                break
+
+        for index in range(len(self.open_locaties)):
+            if id == self.open_locaties[index].id:
+                self.gesloten_locaties.append(self.open_locaties.pop(index))
+                break
+
+    def open_location(self, id:int):
+        for location in self.locaties:
+            if id == location.id:
+                location.beschikbaarheid = True
+                break
+        
+        for index in range(len(self.gesloten_locaties)):
+            if id == self.gesloten_locaties[index].id:
+                self.open_locaties.append(self.gesloten_locaties.pop(index))
+                break
+
     def set_sort_by(self, to_set, key):
         for locatie in to_set:
             locatie.sorted_by = key
