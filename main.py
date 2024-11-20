@@ -4,6 +4,8 @@ from modules.dagindeling_generator import generator
 from random import *
 from tkinter import *
 
+
+
 def randomise_list(given_list:list, total:int):
     """Returns a randomised list with a set total. Makes sure there are no
     duplicates and returns None if the list has a smaller size than the total
