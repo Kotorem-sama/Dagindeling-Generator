@@ -114,8 +114,9 @@ class Gesloten_Locaties_Frame:
         # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
         label_gesloten_locaties = Label(self.frame, text="Gesloten Locaties:",
-                                 font=categories_font, padx=20)
-        label_gesloten_locaties.grid(row=0, column=0, sticky="nsew", columnspan=2)
+                                    font=categories_font, padx=20)
+        label_gesloten_locaties.grid(row=0, column=0, sticky="nsew",
+                                    columnspan=3, pady=10)
 
         # Set options for adding locaties
         locatie_list = Locaties('data/locaties.json')
@@ -127,28 +128,43 @@ class Gesloten_Locaties_Frame:
         search_gesloten_locaties = SearchableComboBox(self.frame, options)
         search_gesloten_locaties.grid(1, 0)
 
-        # Command for button to add to listbox
+        def remove():
+            value = gesloten_locaties_listbox.curselection()
+            if value:
+                gesloten_locaties_listbox.delete(value)
+                self.gesloten_locaties.pop(value[0])
+
+        # Command for button to add items to listbox
         def get():
             value = search_gesloten_locaties.get()
-            if value not in self.gesloten_locaties:
+            if value not in self.gesloten_locaties and value:
                 self.gesloten_locaties.insert(0, value)
                 gesloten_locaties_listbox.insert(0, value)
+            print(self.gesloten_locaties)
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
         button.grid(row=1, column=1)
 
+        # Button that removes from listbox
+        verwijderen_button = Button(self.frame, text="Verwijderen", command=remove)
+        verwijderen_button.grid(row=1, column=2)
 
-        
-        gesloten_locaties_list = Frame(self.frame)
-        gesloten_locaties_list.grid(row=2, column=0, columnspan=2)
+        # Creates frame for scrollable listbox
+        gesloten_locaties_list = Frame(self.frame, highlightbackground="grey",
+                                        highlightthickness=1)
+        gesloten_locaties_list.grid(row=2, column=0, columnspan=3, pady=20)
 
-        gesloten_locaties_listbox = Listbox(gesloten_locaties_list, width=50, height=20)
+        # Adds listbox and makes it scrollable
+        gesloten_locaties_listbox = Listbox(gesloten_locaties_list, width=50,
+                                            height=20)
         gesloten_locaties_listbox.pack(side=LEFT, fill=BOTH)
         gesloten_locaties_scrollbar = Scrollbar(gesloten_locaties_list)
         gesloten_locaties_scrollbar.pack(side=RIGHT, fill=BOTH)
-        gesloten_locaties_listbox.config(yscrollcommand=gesloten_locaties_scrollbar.set)
-        gesloten_locaties_scrollbar.config(command=gesloten_locaties_listbox.yview)
+        gesloten_locaties_listbox.config(
+            yscrollcommand=gesloten_locaties_scrollbar.set)
+        gesloten_locaties_scrollbar.config(
+            command=gesloten_locaties_listbox.yview)
 
     def get(self):
         return self.gesloten_locaties
@@ -163,7 +179,8 @@ class Aanwezigen_Frame:
         categories_font = Font(self.master, size=24, weight=BOLD)
         label_aanwezigen = Label(self.frame, text="Aanwezigen:",
                                  font=categories_font, padx=20)
-        label_aanwezigen.grid(row=0, column=0, sticky="nsew", columnspan=2)
+        label_aanwezigen.grid(row=0, column=0, sticky="nsew", columnspan=3,
+                                pady=10)
 
         # Set options for adding aanwezigen
         werknemers = Werknemers()
@@ -178,19 +195,30 @@ class Aanwezigen_Frame:
         # Command for button to add to listbox
         def get():
             value = search_aanwezigen.get()
-            if value not in self.aanwezigen:
+            if value not in self.aanwezigen and value:
                 self.aanwezigen.insert(0, value)
                 aanwezigen_listbox.insert(0, value)
 
+        def remove():
+            value = aanwezigen_listbox.curselection()
+            if value:
+                aanwezigen_listbox.delete(value)
+                self.aanwezigen.pop(value[0])
+
         # Button that adds to listbox
-        button = Button(self.frame, text="Toevoegen", command=get)
-        button.grid(row=1, column=1)
+        toevoegen_button = Button(self.frame, text="Toevoegen", command=get)
+        toevoegen_button.grid(row=1, column=1)
 
+        # Button that removes from listbox
+        verwijderen_button = Button(self.frame, text="Verwijderen", command=remove)
+        verwijderen_button.grid(row=1, column=2)
 
-        
-        aanwezigen_list = Frame(self.frame)
-        aanwezigen_list.grid(row=2, column=0, columnspan=2)
+        # Creates frame for scrollable listbox.
+        aanwezigen_list = Frame(self.frame, highlightbackground="grey",
+                                highlightthickness=1)
+        aanwezigen_list.grid(row=2, column=0, columnspan=3, pady=20)
 
+        # Adds listbox and makes it scrollable
         aanwezigen_listbox = Listbox(aanwezigen_list, width=50, height=20)
         aanwezigen_listbox.pack(side=LEFT, fill=BOTH)
         aanwezigen_scrollbar = Scrollbar(aanwezigen_list)
@@ -207,7 +235,7 @@ class Generation_Page(Frame):
 
         # Create top frame.
         topFrame = Frame(self)
-        topFrame.pack()
+        topFrame.pack(pady=(50,0))
         
         # Genereer dagindeling text.
         title_font = Font(self.master, size=36, weight=BOLD)
@@ -217,22 +245,28 @@ class Generation_Page(Frame):
         # #Add duinrell logo
 
         # Create middle frame for the following frames.
-        middleFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
-        middleFrame.pack(fill=X)
+        middleFrame = Frame(self)
+        middleFrame.pack(fill=BOTH, expand=True, padx=20, pady=20)
 
         # Create aanwezigen frame and add context.
-        aanwezigen_frame = Frame(middleFrame, highlightbackground="blue", highlightthickness=2)
-        aanwezigen_frame.grid(row=0,column=0)
+        aanwezigen_frame = Frame(middleFrame)
+        aanwezigen_frame.place(anchor="c", relx=.33, rely=.5)
         Aanwezigen_Frame(aanwezigen_frame, self.master)
 
         # Create gesloten locaties frame and add context.
-        gesloten_locaties_frame = Frame(middleFrame, highlightbackground="blue", highlightthickness=2)
-        gesloten_locaties_frame.grid(row=0,column=1)
+        gesloten_locaties_frame = Frame(middleFrame)
+        gesloten_locaties_frame.place(anchor="c", relx=.66, rely=.5)
         Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
 
-        # label_afwezigen = Label(middleFrame, text="Afwezigen:",
-        #                          font=categories_font, padx=20)
-        # label_afwezigen.grid(row=0, column=4, sticky="nsew", columnspan=2)
+        # Create bottom frame for the buttons
+        bottomFrame = Frame(self)
+        bottomFrame.pack(padx=50, pady=(0,50), side=TOP)
+
+        annuleer_button = Button(bottomFrame, text="Annuleren")
+        annuleer_button.pack(side=LEFT, padx=(0,100))
+
+        genereer_button = Button(bottomFrame, text="Genereren")
+        genereer_button.pack(side=RIGHT)
 
 app = App()
 app.geometry("1440x750")
