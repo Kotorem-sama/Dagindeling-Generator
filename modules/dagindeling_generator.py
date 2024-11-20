@@ -1,4 +1,4 @@
-from classes.werknemers import Ingeplanden
+from classes.werknemers import Ingeplanden, Inwerker
 from classes.locaties import Locaties, Locatie
 
 def get_employees_per_location(locatie_id:int, search_list:list, absenten:list):
@@ -84,6 +84,20 @@ def get_least_locations(possibilities:list):
     amount_list = [len(i.ingewerkte_locaties) for i in possibilities]
     return possibilities[amount_list.index(min(amount_list))]
 
+def get_inwerker(ingeplanden:Ingeplanden):
+    try:
+        inwerker = ingeplanden.inwerkers[0]
+        ingeplanden.delete_werknemer(inwerker)
+    except:
+        inwerker = "Supervisor"
+    return inwerker
+
+def is_type_in_list(search_list:list, type):
+    for i in search_list:
+        if type(i) == type:
+            return True
+    return False
+
 def generator(ingeplanden:Ingeplanden, locations:Locaties):
     ingeplanden.sort("inwerk_probability")
     total_inwerkers = len(ingeplanden.inwerkers)
@@ -99,29 +113,39 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     # First fill the groups (beginner locations) with new employees
     for group in locations.groepen.values():
         if priority_list:
-            total_inwerkers -= 1
+            inwerker = get_inwerker(ingeplanden)
         for location in group:
             if not priority_list or dagindeling.get(location, "No") == "No":
                 break
             employee = priority_list.pop(0)
             ingeplanden.delete_werknemer(employee)
-            dagindeling[location].append(employee)
+            dagindeling[location].extend([employee, inwerker])
     
     # If there's more new employees, the while loop will continue till every
     # new employee has a spot.
     locations.sort("moeilijkheidsgraad")
+    locations.reverse()
+
     index = 0
     while priority_list and index < len(locations.open_locaties):
         next_location = locations.open_locaties[index]
-        index += 1
+        if not len(dagindeling[next_location.id]) < (
+            next_location.maximale_medewerkers):
+
+            index += 1
 
         # If the dagindeling doesnt have any employees scheduled in
         # the next location, it will add a new employee.
-        if len(dagindeling[next_location.id]) == 0:
-            total_inwerkers -= 1
+        if len(dagindeling[next_location.id]) < (
+            next_location.maximale_medewerkers):
             employee = priority_list.pop(0)
             ingeplanden.delete_werknemer(employee)
-            dagindeling[next_location.id].append(employee)
+            
+            if is_type_in_list(dagindeling[next_location.id], type(inwerker)):
+                dagindeling[next_location.id].extend([employee])
+            else:
+                inwerker = get_inwerker(ingeplanden)
+                dagindeling[next_location.id].extend([employee, inwerker])
 
     # If theres inwerkers left, people with the highest inwerk_probability
     # will be scheduled first.
@@ -129,16 +153,21 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     index = 0
     priority_list = [ i for i in ingeplanden.medewerkers if
             i.inwerk_probability != 100 and i not in ingeplanden.absenten ]
-    while total_inwerkers > 0 and index < len(locations.open_locaties):
+    while len(ingeplanden.inwerkers) > 0 and index < len(locations.open_locaties):
 
         next_location = locations.open_locaties[index]
         index += 1
 
-        if len(dagindeling[next_location.id]) < next_location.minimale_medewerkers:
-            total_inwerkers -= 1
+        if len(dagindeling[next_location.id]) < (
+            next_location.maximale_medewerkers):
             employee = priority_list.pop(0)
             ingeplanden.delete_werknemer(employee)
-            dagindeling[next_location.id].append(employee)
+            
+            if is_type_in_list(dagindeling[next_location.id], Inwerker):
+                dagindeling[next_location.id].extend([employee])
+            else:
+                inwerker = get_inwerker(ingeplanden)
+                dagindeling[next_location.id].extend([employee, inwerker])
 
     # All internal employees are added to the dagindeling
     dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
@@ -146,11 +175,10 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
                                         ingeplanden.externe_medewerkers, True)
     if not ingeplanden.interne_medewerkers and (
-        not ingeplanden.externe_medewerkers) and total_inwerkers > 0:
-        total_inwerkers = 0
+        not ingeplanden.externe_medewerkers) and not ingeplanden.inwerkers:
         dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
                                         ingeplanden.inwerkers, True)
-    print(len(ingeplanden.medewerkers) - len(ingeplanden.inwerkers))
+    print(len(ingeplanden.medewerkers))
 
     if ingeplanden.interne_medewerkers or ingeplanden.externe_medewerkers:
         dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
@@ -162,4 +190,4 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
             dagindeling = schedule_rest_employees(locations, dagindeling,
                             ingeplanden, ingeplanden.inwerkers, False)
     print(dagindeling)
-    print(len(ingeplanden.medewerkers) - len(ingeplanden.inwerkers))
+    print(len(ingeplanden.medewerkers))

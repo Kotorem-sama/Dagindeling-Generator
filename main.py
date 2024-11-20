@@ -31,6 +31,6 @@ for i in locatie_list.locaties:
 print(totaal)
 
 aanwezigen = Ingeplanden("Vandaag.json")
-aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 20))
+aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 50))
 generator(aanwezigen, locatie_list)
 # aanwezigen.save_to_file()
