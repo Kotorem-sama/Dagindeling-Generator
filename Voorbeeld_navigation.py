@@ -109,42 +109,50 @@ class Generation_Page(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
 
+        # Genereer dagindeling text
         title_font = Font(self.master, size=36, weight=BOLD)
         label_title = Label(self, text="Genereer Dagindeling",
                             font=title_font)
         label_title.grid(row=0, column=0)
         # #Add duinrell logo
 
+        # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
         label_aanwezigen = Label(self, text="Aanwezigen:",
                                  font=categories_font, padx=20)
         label_aanwezigen.grid(row=1, column=0, sticky="nsew")
 
+        # Set options for adding aanwezigen
         werknemers = Werknemers()
-
         options = []
         for werknemer in werknemers.medewerkers:
             options.append(f"{werknemer.naam} ({werknemer.personeelsnummer})")
 
-        def get():
-            value = search_aanwezigen.get()
-            aanwezigen.append(value)
-            aanwezigen_listbox.insert(END, value)
-
+        # Searchable combobox
         search_aanwezigen = SearchableComboBox(self, options)
         search_aanwezigen.grid(2, 0)
 
+        # Command for button to add to listbox
+        def get():
+            value = search_aanwezigen.get()
+            aanwezigen.insert(0, value)
+            aanwezigen_listbox.insert(0, value)
+
+        # Button that adds to listbox
         button = Button(self, text="Toevoegen", command=get)
         button.grid(row=2, column=1)
-        aanwezigen = []
 
+
+        aanwezigen = []
         aanwezigen_list = Frame(self)
         aanwezigen_list.grid(row=3, column=0)
 
         aanwezigen_listbox = Listbox(aanwezigen_list)
-        aanwezigen_listbox.pack(side = LEFT, fill = BOTH) 
+        aanwezigen_listbox.pack(side = LEFT, fill = BOTH)
+
         aanwezigen_scrollbar = Scrollbar(aanwezigen_list)
         aanwezigen_scrollbar.pack(side = RIGHT, fill = BOTH)
+
         aanwezigen_listbox.config(yscrollcommand=aanwezigen_scrollbar.set)
         aanwezigen_scrollbar.config(command=aanwezigen_listbox.yview)
 
