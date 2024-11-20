@@ -2,6 +2,7 @@ from classes.werknemers import Werknemers, Ingeplanden
 from classes.locaties import Locaties
 from modules.dagindeling_generator import generator
 from random import *
+from tkinter import *
 
 def randomise_list(given_list:list, total:int):
     """Returns a randomised list with a set total. Makes sure there are no
@@ -30,7 +31,7 @@ for i in locatie_list.locaties:
 
 print(totaal)
 
-aanwezigen = Ingeplanden("Vandaag.json")
-aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 50))
-generator(aanwezigen, locatie_list)
+# aanwezigen = Ingeplanden("Vandaag.json")
+# aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 50))
+# generator(aanwezigen, locatie_list)
 # aanwezigen.save_to_file()
