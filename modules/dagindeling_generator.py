@@ -46,6 +46,34 @@ def get_lower_fysical_power(possibilities:list, location:Locatie):
 
     return too_weak
 
+def schedule_rest_employees(locations:Locaties, dagindeling:list,
+                            ingeplanden:Ingeplanden, medewerkers_list):
+    for location in locations.open_locaties:
+        minimum = location.minimale_medewerkers
+        if len(dagindeling[location.id]) >= minimum:
+            continue
+        
+        possibilities = get_employees_per_location(location.id,
+                                            medewerkers_list,
+                                            ingeplanden.absenten)
+        if not possibilities:
+            continue
+        
+        lower_fysical_power = get_lower_fysical_power(possibilities, location)
+        remaining = [i for i in possibilities if i not in lower_fysical_power]
+        if not remaining:
+            continue
+        
+        if len(remaining) > 1:
+            employee = get_least_locations(possibilities)
+        else:
+            employee = remaining[0]
+        
+        ingeplanden.delete_werknemer(employee)
+        dagindeling[location.id].append(employee)
+
+    return dagindeling
+
 def get_least_locations(possibilities:list):
     amount_list = [len(i.ingewerkte_locaties) for i in possibilities]
     return possibilities[amount_list.index(min(amount_list))]
@@ -89,6 +117,8 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
             ingeplanden.delete_werknemer(employee)
             dagindeling[next_location.id].append(employee)
 
+    # If theres inwerkers left, people with the highest inwerk_probability
+    # will be scheduled first.
     locations.sort("belang")
     index = 0
     priority_list = [ i for i in ingeplanden.medewerkers if
@@ -104,26 +134,15 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
             ingeplanden.delete_werknemer(employee)
             dagindeling[next_location.id].append(employee)
 
-    for location in locations.open_locaties:
-        minimum = location.minimale_medewerkers
-        if len(dagindeling[location.id]) == minimum:
-            continue
-        
-        possibilities = get_employees_per_location(location.id,
-                                            ingeplanden.interne_medewerkers,
-                                            ingeplanden.absenten)
-        if not possibilities:
-            continue
-        
-        lower_fysical_power = get_lower_fysical_power(possibilities, location)
-        remaining = [i for i in possibilities if i not in lower_fysical_power]
-        if not remaining:
-            continue
-        
-        if len(remaining) > 1:
-            employee = get_least_locations(possibilities)
-        else:
-            employee = remaining[0]
-        
-        ingeplanden.delete_werknemer(employee)
-        dagindeling[location.id].append(employee)
+    # All internal employees are added to the dagindeling
+    dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
+                                          ingeplanden.interne_medewerkers)
+    dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
+                                          ingeplanden.externe_medewerkers)
+    if not ingeplanden.interne_medewerkers and (
+        not ingeplanden.externe_medewerkers) and ingeplanden.inwerkers:
+        dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
+                                          ingeplanden.inwerkers)
+
+    print(dagindeling)
+    print(ingeplanden.medewerkers)
