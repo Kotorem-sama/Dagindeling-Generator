@@ -47,11 +47,17 @@ def get_lower_fysical_power(possibilities:list, location:Locatie):
     return too_weak
 
 def schedule_rest_employees(locations:Locaties, dagindeling:list,
-                            ingeplanden:Ingeplanden, medewerkers_list):
+                            ingeplanden:Ingeplanden, medewerkers_list,
+                            minormax:bool):
     for location in locations.open_locaties:
-        minimum = location.minimale_medewerkers
-        if len(dagindeling[location.id]) >= minimum:
-            continue
+        if minormax:
+            minimum = location.minimale_medewerkers
+            if len(dagindeling[location.id]) >= minimum:
+                continue
+        else:
+            maximum = location.maximale_medewerkers
+            if len(dagindeling[location.id]) == maximum:
+                continue
         
         possibilities = get_employees_per_location(location.id,
                                             medewerkers_list,
@@ -136,13 +142,24 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
 
     # All internal employees are added to the dagindeling
     dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
-                                          ingeplanden.interne_medewerkers)
+                                        ingeplanden.interne_medewerkers, True)
     dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
-                                          ingeplanden.externe_medewerkers)
+                                        ingeplanden.externe_medewerkers, True)
     if not ingeplanden.interne_medewerkers and (
         not ingeplanden.externe_medewerkers) and total_inwerkers > 0:
+        total_inwerkers = 0
         dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
-                                          ingeplanden.inwerkers)
+                                        ingeplanden.inwerkers, True)
+    print(len(ingeplanden.medewerkers) - len(ingeplanden.inwerkers))
 
+    if ingeplanden.interne_medewerkers or ingeplanden.externe_medewerkers:
+        dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
+                            ingeplanden.interne_medewerkers, False)
+        dagindeling = schedule_rest_employees(locations, dagindeling,
+                            ingeplanden, ingeplanden.externe_medewerkers, False)
+        if not ingeplanden.interne_medewerkers and (
+            not ingeplanden.externe_medewerkers) and total_inwerkers > 0:
+            dagindeling = schedule_rest_employees(locations, dagindeling,
+                            ingeplanden, ingeplanden.inwerkers, False)
     print(dagindeling)
-    print(ingeplanden.medewerkers)
+    print(len(ingeplanden.medewerkers) - len(ingeplanden.inwerkers))
