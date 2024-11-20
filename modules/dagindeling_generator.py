@@ -140,7 +140,7 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
                                           ingeplanden.externe_medewerkers)
     if not ingeplanden.interne_medewerkers and (
-        not ingeplanden.externe_medewerkers) and ingeplanden.inwerkers:
+        not ingeplanden.externe_medewerkers) and total_inwerkers > 0:
         dagindeling = schedule_rest_employees(locations, dagindeling, ingeplanden,
                                           ingeplanden.inwerkers)
 
