@@ -130,8 +130,9 @@ class Gesloten_Locaties_Frame:
         # Command for button to add to listbox
         def get():
             value = search_gesloten_locaties.get()
-            self.gesloten_locaties.insert(0, value)
-            gesloten_locaties_listbox.insert(0, value)
+            if value not in self.gesloten_locaties:
+                self.gesloten_locaties.insert(0, value)
+                gesloten_locaties_listbox.insert(0, value)
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
@@ -177,8 +178,9 @@ class Aanwezigen_Frame:
         # Command for button to add to listbox
         def get():
             value = search_aanwezigen.get()
-            self.aanwezigen.insert(0, value)
-            aanwezigen_listbox.insert(0, value)
+            if value not in self.aanwezigen:
+                self.aanwezigen.insert(0, value)
+                aanwezigen_listbox.insert(0, value)
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
