@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.font import *
 from tkinter.ttk import Combobox
-from classes.werknemers import Werknemers, Ingeplanden
+from classes.werknemers import Werknemers, Ingeplanden, medewerker_format
 from classes.locaties import Locaties
 
 class SearchableComboBox:
@@ -86,15 +86,17 @@ class Gesloten_Locaties_Frame:
         def get():
             value = search_gesloten_locaties.get()
             if value:
-                gesloten_locaties_listbox.insert(0, value)
                 
                 # Gets the id from the string and closes the attraction.
                 locatie_id = int(value.split()[-1].strip("(").strip(")"))
-                locatie_list.close_location(locatie_id)
-                locatie_list.save_to_file()
+                if not self.gesloten_locaties.is_location_closed(locatie_id):
+                    locatie_list.close_location(locatie_id)
+                    locatie_list.save_to_file()
 
-                self.gesloten_locaties.close_location(locatie_id)
-                self.gesloten_locaties.save_to_file()
+                    self.gesloten_locaties.close_location(locatie_id)
+                    self.gesloten_locaties.save_to_file()
+
+                    gesloten_locaties_listbox.insert(0, value)
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
@@ -156,11 +158,12 @@ class Aanwezigen_Frame:
             value = search_aanwezigen.get()
             if value:
                 personeelsnummer = int(value.split()[-1].strip("(").strip(")"))
-                employee = werknemers.get_employee_by_id(personeelsnummer)
-                self.aanwezigen.to_class([employee])
-                self.aanwezigen.save_to_file()
+                if not self.aanwezigen.is_employee_in_list(personeelsnummer):
+                    employee = werknemers.get_employee_by_id(personeelsnummer)
+                    self.aanwezigen.to_class([employee])
+                    self.aanwezigen.save_to_file()
 
-                aanwezigen_listbox.insert(0, value)
+                    aanwezigen_listbox.insert(0, value)
 
         def remove():
             value = aanwezigen_listbox.curselection()

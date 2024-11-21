@@ -10,6 +10,8 @@ class Werknemers:
         self.medewerkers = []
         self.path = path
         self.retreive_from_file()
+        if path != 'data/werknemers.json':
+            self.save_to_file()
 
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
@@ -43,6 +45,12 @@ class Werknemers:
             werknemers_list = jf.read(self.path)
             if werknemers_list:
                 self.to_class(werknemers_list)
+
+    def is_employee_in_list(self, id):
+        for employee in self.medewerkers:
+            if employee.personeelsnummer == id:
+                return True
+        return False
 
     def get_employee_by_id(self, id):
         for employee in self.medewerkers:

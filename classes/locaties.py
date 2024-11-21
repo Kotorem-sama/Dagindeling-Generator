@@ -9,6 +9,17 @@ class Locaties:
         self.path = path
         self.retreive_from_file()
 
+    def get_index_by_id(self, id, search_list):
+        for i in range(len(search_list)):
+            if id == search_list[i].id:
+                return i
+            
+    def is_location_closed(self, id):
+        for i in self.gesloten_locaties:
+            if id == i.id:
+                return True
+        return False
+
     def close_location(self, id:int):
         for location in self.locaties:
             if id == location.id:
