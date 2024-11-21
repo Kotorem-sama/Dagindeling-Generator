@@ -11,17 +11,17 @@ class App(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
 
-        container = Frame(self)
-        container.place(x=0, y=0, relwidth=1, relheight=1)
+        self.container = Frame(self)
+        self.container.place(x=0, y=0, relwidth=1, relheight=1)
 
         self.frames = {}
 
         for F in (HomeScreen, Generation_Page, Dagindeling_Page, PageOne, PageTwo, StartPage):
-            frame = F(container, self)
+            frame = F(self.container, self)
             self.frames[F] = frame
             frame.place(x=0, y=0, relwidth=1, relheight=1)
 
-        self.show_frame(Dagindeling_Page)
+        self.show_frame(Generation_Page)
 
     def show_frame(self, context):
         frame = self.frames[context]
@@ -36,8 +36,16 @@ class App(Tk):
         frame.tkraise()
 
     def show_generated_dagindeling(self):
-        frame = self.frames[Dagindeling_Page]
-        frame.tkraise()
+        for widget in self.container.winfo_children():
+            widget.destroy()
+        self.frames = {}
+
+        for F in (HomeScreen, Generation_Page, Dagindeling_Page, PageOne, PageTwo, StartPage):
+            frame = F(self.container, self)
+            self.frames[F] = frame
+            frame.place(x=0, y=0, relwidth=1, relheight=1)
+        
+        self.show_frame(Dagindeling_Page)
 
 class StartPage(Frame):
     def __init__(self, parent, controller):

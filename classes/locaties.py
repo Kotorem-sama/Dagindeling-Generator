@@ -14,6 +14,11 @@ class Locaties:
             if id == search_list[i].id:
                 return i
             
+    def get_location_by_id(self, id):
+        for location in self.locaties:
+            if location.id == id:
+                return location
+            
     def is_location_closed(self, id):
         for i in self.gesloten_locaties:
             if id == i.id:
