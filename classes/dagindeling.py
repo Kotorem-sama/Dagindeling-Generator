@@ -1,16 +1,71 @@
 from classes.werknemers import Ingeplanden, Inwerker
 from classes.locaties import Locaties, Locatie
-from classes.werknemers import Extern_medewerker, Intern_medewerker, Inwerker
+from classes.werknemers import Extern_medewerker, Intern_medewerker, Inwerker, Werknemers
 from classes.read_files import date as get_date
 from classes.read_files import json_file as jf
+from classes.read_files import csv_file as csv
 
 class Dagindeling:
     def __init__(self):
         self.dagindeling = {}
         self.inwerkers = {}
         self.json = f"data/ingeplanden/{get_date.get()[0]}_dagindeling.json"
-        self.csv = f"dagindelingen/{get_date.get()[0]}.json"
-        self.generator()
+        self.csv = f"dagindelingen/{get_date.get()[0]}.csv"
+        self.start_up()
+    
+    def start_up(self):
+        file_check = csv.read(self.csv)
+        if file_check:
+            self.load_csv()
+        else:
+            self.generator()
+
+    def save_csv(self):
+        csv_list = [[ "Locaties", "", "", "", "Inwerkers" ]]
+        locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
+
+        for key, value in self.dagindeling.items():
+            line = []
+            locatie = locations.get_location_by_id(int(key))
+            line.append(f"{locatie.id}.{locatie.naam}")
+
+            for index in range(3):
+                if index < len(value):
+                    msg = f"{value[index].naam} ({value[index].personeelsnummer})"
+                    line.append(msg)
+                else:
+                    line.append("")
+                    
+            if self.inwerkers[key]:
+                msg = f"{self.inwerkers[key][0].naam} ({self.inwerkers[key][0].personeelsnummer})"
+                line.append(msg)
+            else:
+                line.append("")
+            
+            csv_list.append(line)
+
+        csv.write(self.csv, csv_list)
+
+    def load_csv(self):
+        werknemers = Werknemers()
+        rows = csv.read(self.csv)
+        if not rows:
+            return
+
+        for row in rows[1:]:
+            self.dagindeling[row[0].split(".")[0]] = []
+            self.inwerkers[row[0].split(".")[0]] = []
+
+            for index in range(3):
+                if not row[1+index] == "":
+                    personeelsnummer = row[1+index].split("(")[-1].replace(")", "")
+                    employee = werknemers.get_employee_by_id(int(personeelsnummer))
+                    self.dagindeling[row[0].split(".")[0]].append(employee)
+                    
+            if not row[4] == "":
+                personeelsnummer = row[4].split("(")[-1].replace(")", "")
+                employee = werknemers.get_employee_by_id(int(personeelsnummer))
+                self.inwerkers[row[0].split(".")[0]].append(employee)
 
     def save_backup_json(self):
         dagindeling = self.to_list()

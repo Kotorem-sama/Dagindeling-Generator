@@ -78,6 +78,7 @@ class Dagindeling_Page(Frame):
 
         def get():
             for i, j in changed_dagindeling.items():
+                dagindeling.save_backup_json()
                 print(i, ", ".join([k.get() for k in j]))
         
         command=lambda:controller.show_generation_page()
