@@ -201,6 +201,50 @@ class Aanwezigen_Frame:
     def get(self):
         return self.aanwezigen
 
+class Date_Frame:
+    def __init__(self, frame, master):
+        self.frame = frame
+        self.master = master
+        self.day = 1
+        self.month = 1
+        self.year = 2024
+
+        categories_font = Font(self.master, size=24, weight=BOLD)
+        Label(self.frame, text="Date of birth:", font=categories_font,
+                padx=20).grid(row=0, column=0, columnspan=3)
+        
+        spinbox_font = Font(family='Helvetica', size=24)
+        spinboxval1 = IntVar(value=1)
+        spinbox1 = Spinbox(self.frame, from_=1, to=31, wrap=True,
+                        width=2, textvariable=spinboxval1, font=spinbox_font)
+        spinbox1.grid(row=1, column=0)
+
+        spinboxval2 = IntVar(value=1)
+        spinbox2 = Spinbox(self.frame, from_=1, to=12, wrap=True,
+                        width=2, textvariable=spinboxval2, font=spinbox_font)
+        spinbox2.grid(row=1, column=1)
+
+        spinboxval3 = IntVar(value=2024)
+        spinbox3 = Spinbox(self.frame, from_=1900, to=2024, wrap=True,
+                        width=4, textvariable=spinboxval3, font=spinbox_font)
+        spinbox3.grid(row=1, column=2)
+
+        def pressed_1(event):
+            self.day = int(spinbox1.get())
+
+        def pressed_2(event):
+            self.month = int(spinbox2.get())
+
+        def pressed_3(event):
+            self.year = int(spinbox3.get())
+
+        spinbox1.bind("<Leave>", pressed_1)
+        spinbox2.bind("<Leave>", pressed_2)
+        spinbox3.bind("<Leave>", pressed_3)
+
+    def get(self):
+        return (self.year, self.month, self.day)
+
 class Generation_Page(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -208,20 +252,34 @@ class Generation_Page(Frame):
         # Create top frame.
         topFrame = Frame(self)
         topFrame.pack(pady=(50,0))
+
+        def checkdate():
+            year, month, day = date.get()
+            
+            leapyear = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+            
+            if leapyear and month == 2 and day == 29:
+                return True
+            if month == 2 and day > 28:
+                return False
+            if not month in [1, 3, 5, 7, 8, 10, 12] and day > 30:
+                return False
+            return True
         
         def refresh():
-            for widget in middleFrame.winfo_children():
-                widget.destroy()
+            if checkdate():
+                for widget in middleFrame.winfo_children():
+                    widget.destroy()
 
-            # Create aanwezigen frame and add context.
-            aanwezigen_frame = Frame(middleFrame)
-            aanwezigen_frame.place(anchor="c", relx=.33, rely=.5)
-            Aanwezigen_Frame(aanwezigen_frame, self.master)
+                # Create aanwezigen frame and add context.
+                aanwezigen_frame = Frame(middleFrame)
+                aanwezigen_frame.place(anchor="c", relx=.5, rely=.5)
+                Aanwezigen_Frame(aanwezigen_frame, self.master)
 
-            # Create gesloten locaties frame and add context.
-            gesloten_locaties_frame = Frame(middleFrame)
-            gesloten_locaties_frame.place(anchor="c", relx=.66, rely=.5)
-            Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
+                # Create gesloten locaties frame and add context.
+                gesloten_locaties_frame = Frame(middleFrame)
+                gesloten_locaties_frame.place(anchor="c", relx=.75, rely=.5)
+                Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
 
         # Genereer dagindeling text.
         title_font = Font(self.master, size=36, weight=BOLD)
@@ -234,14 +292,24 @@ class Generation_Page(Frame):
         middleFrame = Frame(self)
         middleFrame.pack(fill=BOTH, expand=True, padx=20, pady=20)
 
-        # Create aanwezigen frame and add context.
+        # Creates date frame and adds content.
+        date_frame = Frame(middleFrame)
+        date_frame.place(anchor="c", relx=.25, rely=.5)
+        date = Date_Frame(date_frame, self.master)
+        
+        buttonFrame = Frame(date_frame)
+        buttonFrame.grid(row=2, column=1, pady=20)
+
+        button = Button(buttonFrame, text="Bevestigen")
+        button.grid()
+        # Create aanwezigen frame and adds content.
         aanwezigen_frame = Frame(middleFrame)
-        aanwezigen_frame.place(anchor="c", relx=.33, rely=.5)
+        aanwezigen_frame.place(anchor="c", relx=.5, rely=.5)
         Aanwezigen_Frame(aanwezigen_frame, self.master)
 
-        # Create gesloten locaties frame and add context.
+        # Create gesloten locaties frame and adds content.
         gesloten_locaties_frame = Frame(middleFrame)
-        gesloten_locaties_frame.place(anchor="c", relx=.66, rely=.5)
+        gesloten_locaties_frame.place(anchor="c", relx=.75, rely=.5)
         Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
 
         # Create bottom frame for the buttons
