@@ -12,35 +12,34 @@ class Dagindeling_Page(Frame):
         get_date.get()
         
         topFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
+        middleFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
+        leftFrame = Frame(middleFrame, highlightbackground="black", highlightthickness=2)
+        rightFrame = Frame(middleFrame, highlightbackground="red", highlightthickness=2)
+
         topFrame.pack(side = TOP)
+        middleFrame.pack(fill=BOTH, expand=TRUE)
+        leftFrame.place(x=0, y=0, relwidth=0.7, relheight=1)
+        rightFrame.place(relx=0.7, y=0, relwidth=0.3, relheight=1)
 
         title_font = Font(self.master, size=36, weight=BOLD)
         dagindeling_label = Label(topFrame, text="Gegenereerde Dagindeling",
                                   font=title_font)
         dagindeling_label.grid(row=0, column=0)
 
-        middleFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
-        middleFrame.pack(fill=BOTH, expand=TRUE)
-
-        leftFrame = Frame(middleFrame, highlightbackground="black", highlightthickness=2)
-        leftFrame.place(x=0, y=0, relwidth=0.7, relheight=1)
-
-        rightFrame = Frame(middleFrame, highlightbackground="red", highlightthickness=2)
-        rightFrame.place(relx=0.7, y=0, relwidth=0.3, relheight=1)
-
-
         locations_font = Font(self.master, size=24)
         attractions_label = Label(leftFrame, text="Attracties:",
                             font=locations_font)
         attractions_label.grid(row=0, column=0, pady=10, padx=10)
 
-        list_sample = [{1: ["B", "B", "B"]}, {2: ["B", "B", "B"]}]
         outcomes_list = []
         ingeplanden = Ingeplanden(f"{get_date.get()[0]}_ingeplanden.json")
         locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
+        
+        options = []
+        for werknemer in ingeplanden.medewerkers:
+            options.append(f"{werknemer.naam} ({werknemer.personeelsnummer})")
 
         dagindeling = generator(ingeplanden, locations)
-        print(dagindeling)
         index = 0
 
         for key, values in dagindeling.items():
@@ -51,12 +50,19 @@ class Dagindeling_Page(Frame):
 
             Label(location_frame, text=location.id).grid(row=0, column=0)
             Label(location_frame, text=location.naam+":").grid(row=0, column=1)
+            
+            # StringVar(value=werknemer_box.get())
+            # # werknemer_box = SearchableComboBox(location_frame, options)
+            # werknemer_box.grid(row=0, column=2)
 
-            index += 1
 
             employees = values
 
 
-        # command=lambda:controller.show_generation_page()
-        # terug_button = Button(self, text="Terug", command=command)
-        # terug_button.pack()
+
+            index += 1
+
+
+        command=lambda:controller.show_generation_page()
+        terug_button = Button(rightFrame, text="Terug", command=command)
+        terug_button.pack()
