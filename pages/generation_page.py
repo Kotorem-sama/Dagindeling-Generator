@@ -147,7 +147,7 @@ class Aanwezigen_Frame:
         for werknemer in werknemers.medewerkers:
             options.append(f"{werknemer.naam} ({werknemer.personeelsnummer})")
 
-        # Searchable combobox
+        # Searchable combobox with all aanwezigen
         search_aanwezigen = SearchableComboBox(self.frame, options)
         search_aanwezigen.grid(1, 0)
 
@@ -268,17 +268,14 @@ class Generation_Page(Frame):
         
         def refresh():
             if checkdate():
-                for widget in middleFrame.winfo_children():
+                for widget in aanwezigen_frame.winfo_children() and (
+                    gesloten_locaties_frame.winfo_children()):
                     widget.destroy()
 
                 # Create aanwezigen frame and add context.
-                aanwezigen_frame = Frame(middleFrame)
-                aanwezigen_frame.place(anchor="c", relx=.5, rely=.5)
                 Aanwezigen_Frame(aanwezigen_frame, self.master)
 
-                # Create gesloten locaties frame and add context.
-                gesloten_locaties_frame = Frame(middleFrame)
-                gesloten_locaties_frame.place(anchor="c", relx=.75, rely=.5)
+                # # Create gesloten locaties frame and add context.
                 Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
 
         # Genereer dagindeling text.
@@ -300,7 +297,7 @@ class Generation_Page(Frame):
         buttonFrame = Frame(date_frame)
         buttonFrame.grid(row=2, column=1, pady=20)
 
-        button = Button(buttonFrame, text="Bevestigen")
+        button = Button(buttonFrame, text="Bevestigen", command=refresh)
         button.grid()
         # Create aanwezigen frame and adds content.
         aanwezigen_frame = Frame(middleFrame)
@@ -316,7 +313,7 @@ class Generation_Page(Frame):
         bottomFrame = Frame(self)
         bottomFrame.pack(padx=50, pady=(0,50), side=TOP)
 
-        terug_button = Button(bottomFrame, text="Terug", command=refresh)
+        terug_button = Button(bottomFrame, text="Terug")
         terug_button.pack(side=LEFT, padx=(0,100))
 
         genereer_button = Button(bottomFrame, text="Genereren")
