@@ -3,6 +3,7 @@ from tkinter.font import *
 from tkinter.ttk import Combobox
 from classes.werknemers import Werknemers, Ingeplanden, medewerker_format
 from classes.locaties import Locaties
+from classes.read_files import date as get_date
 
 class SearchableComboBox:
     def __init__(self, frame, options=[]):
@@ -44,7 +45,8 @@ class Gesloten_Locaties_Frame:
     def __init__(self, frame, master):
         self.frame = frame
         self.master = master
-        self.gesloten_locaties = Locaties("data/ingeplanden/2024/11/21_locaties.json")
+        self.path = f"data/ingeplanden/{get_date.get()[0]}_locaties.json"
+        self.gesloten_locaties = Locaties(self.path)
 
         # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
@@ -134,7 +136,7 @@ class Aanwezigen_Frame:
     def __init__(self, frame, master):
         self.frame = frame
         self.master = master
-        self.aanwezigen = Ingeplanden("2024/11/21_ingeplanden.json")
+        self.aanwezigen = Ingeplanden(f"{get_date.get()[0]}_ingeplanden.json")
 
         # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
@@ -208,26 +210,28 @@ class Date_Frame:
     def __init__(self, frame, master):
         self.frame = frame
         self.master = master
-        self.day = 1
-        self.month = 1
-        self.year = 2024
+
+        date = get_date.get()
+        self.day = int(date[0].split("/")[2])
+        self.month = int(date[0].split("/")[1])
+        self.year = int(date[0].split("/")[0])
 
         categories_font = Font(self.master, size=24, weight=BOLD)
-        Label(self.frame, text="Date of birth:", font=categories_font,
-                padx=20).grid(row=0, column=0, columnspan=3)
+        Label(self.frame, text="Dag:", font=categories_font,
+                padx=20).grid(row=0, column=0, columnspan=3, pady=10)
         
         spinbox_font = Font(family='Helvetica', size=24)
-        spinboxval1 = IntVar(value=1)
+        spinboxval1 = IntVar(value=self.day)
         spinbox1 = Spinbox(self.frame, from_=1, to=31, wrap=True,
                         width=2, textvariable=spinboxval1, font=spinbox_font)
         spinbox1.grid(row=1, column=0)
 
-        spinboxval2 = IntVar(value=1)
+        spinboxval2 = IntVar(value=self.month)
         spinbox2 = Spinbox(self.frame, from_=1, to=12, wrap=True,
                         width=2, textvariable=spinboxval2, font=spinbox_font)
         spinbox2.grid(row=1, column=1)
 
-        spinboxval3 = IntVar(value=2024)
+        spinboxval3 = IntVar(value=self.year)
         spinbox3 = Spinbox(self.frame, from_=1900, to=2024, wrap=True,
                         width=4, textvariable=spinboxval3, font=spinbox_font)
         spinbox3.grid(row=1, column=2)
@@ -256,6 +260,10 @@ class Generation_Page(Frame):
         topFrame = Frame(self)
         topFrame.pack(pady=(50,0))
 
+        # Sets date if it doesnt exist
+        get_date.get()
+
+        # Checks whether a date exists or not
         def checkdate():
             year, month, day = date.get()
             
@@ -269,8 +277,12 @@ class Generation_Page(Frame):
                 return False
             return True
         
+        # Refreshes the aanwezigen and gesloten locaties frame if date exists.
         def refresh():
             if checkdate():
+                year, month, day = date.get()
+                get_date.set(f"{year}/{month}/{day}")
+
                 for widget in aanwezigen_frame.winfo_children() and (
                     gesloten_locaties_frame.winfo_children()):
                     widget.destroy()
@@ -316,8 +328,10 @@ class Generation_Page(Frame):
         bottomFrame = Frame(self)
         bottomFrame.pack(padx=50, pady=(0,50), side=TOP)
 
+        # Add back button
         terug_button = Button(bottomFrame, text="Terug")
         terug_button.pack(side=LEFT, padx=(0,100))
 
+        # Add generate button
         genereer_button = Button(bottomFrame, text="Genereren")
         genereer_button.pack(side=RIGHT)

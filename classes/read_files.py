@@ -1,7 +1,7 @@
 from pathlib import Path
 import csv
 import json
-from os import makedirs
+import datetime
 
 class json_file:
     def read(path:str):
@@ -36,3 +36,16 @@ class csv_file:
             writer = csv.writer(file, delimiter=';')
             for info in information:
                     writer.writerow(info)
+
+class date:
+    def get():
+        work_date = json_file.read('data/work_date.json')
+        if work_date:
+            return work_date
+        else:
+            today = datetime.date.today()
+            today = today.strftime("%Y/%m/%d")
+            date.set(today)
+
+    def set(date:str):
+        json_file.write('data/work_date.json', [date])
