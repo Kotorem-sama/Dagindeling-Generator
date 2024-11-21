@@ -25,16 +25,9 @@ werknemers = Werknemers()
 werknemers.save_to_file()
 
 locatie_list = Locaties('data/locaties.json')
-locatie_list.open_location(1)
 locatie_list.save_to_file()
 
-totaal = 0
-for i in locatie_list.locaties:
-    totaal += i.maximale_medewerkers
-
-print(totaal)
-
-# aanwezigen = Ingeplanden("Vandaag.json")
-# aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 50))
-# generator(aanwezigen, locatie_list)
+aanwezigen = Ingeplanden("Vandaag.json")
+aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 50))
+generator(aanwezigen, locatie_list)
 # aanwezigen.save_to_file()

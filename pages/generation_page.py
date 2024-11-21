@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.font import *
 from tkinter.ttk import Combobox
-from classes.werknemers import Werknemers
+from classes.werknemers import Werknemers, Ingeplanden
 from classes.locaties import Locaties
 
 class SearchableComboBox:
@@ -44,7 +44,7 @@ class Gesloten_Locaties_Frame:
     def __init__(self, frame, master):
         self.frame = frame
         self.master = master
-        self.gesloten_locaties = []
+        self.gesloten_locaties = Locaties("data/ingeplanden/2024/11/21_locaties.json")
 
         # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
@@ -58,6 +58,10 @@ class Gesloten_Locaties_Frame:
         options = []
         for locatie in locatie_list.locaties:
             options.append(f"{locatie.naam} ({locatie.id})")
+        
+        if not self.gesloten_locaties.locaties:
+            self.gesloten_locaties.to_class(locatie_list.to_list())
+            self.gesloten_locaties.save_to_file()
 
         # Searchable combobox
         search_gesloten_locaties = SearchableComboBox(self.frame, options)
@@ -66,25 +70,31 @@ class Gesloten_Locaties_Frame:
         def remove():
             value = gesloten_locaties_listbox.curselection()
             if value:
-                gesloten_locaties_listbox.delete(value)
-                val = self.gesloten_locaties.pop(value[0])
+                val = gesloten_locaties_listbox.get(value[0])
                 
                 # Gets the id from the string and closes the attraction.
                 locatie_id = int(val.split()[-1].strip("(").strip(")"))
                 locatie_list.open_location(locatie_id)
                 locatie_list.save_to_file()
 
+                self.gesloten_locaties.open_location(locatie_id)
+                self.gesloten_locaties.save_to_file()
+
+                gesloten_locaties_listbox.delete(value)
+
         # Command for button to add items to listbox.
         def get():
             value = search_gesloten_locaties.get()
-            if value not in self.gesloten_locaties and value:
-                self.gesloten_locaties.insert(0, value)
+            if value:
                 gesloten_locaties_listbox.insert(0, value)
                 
                 # Gets the id from the string and closes the attraction.
                 locatie_id = int(value.split()[-1].strip("(").strip(")"))
                 locatie_list.close_location(locatie_id)
                 locatie_list.save_to_file()
+
+                self.gesloten_locaties.close_location(locatie_id)
+                self.gesloten_locaties.save_to_file()
 
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
@@ -112,8 +122,7 @@ class Gesloten_Locaties_Frame:
             command=gesloten_locaties_listbox.yview)
         
         # Adds the already closed locations to the list
-        for locatie in locatie_list.gesloten_locaties:
-            self.gesloten_locaties.insert(0, f"{locatie.naam} ({locatie.id})")
+        for locatie in self.gesloten_locaties.gesloten_locaties:
             gesloten_locaties_listbox.insert(0, f"{locatie.naam} ({locatie.id})")
 
     def get(self):
@@ -123,7 +132,7 @@ class Aanwezigen_Frame:
     def __init__(self, frame, master):
         self.frame = frame
         self.master = master
-        self.aanwezigen = []
+        self.aanwezigen = Ingeplanden("2024/11/21_ingeplanden.json")
 
         # Aanwezigen text
         categories_font = Font(self.master, size=24, weight=BOLD)
@@ -145,15 +154,22 @@ class Aanwezigen_Frame:
         # Command for button to add to listbox
         def get():
             value = search_aanwezigen.get()
-            if value not in self.aanwezigen and value:
-                self.aanwezigen.insert(0, value)
+            if value:
+                personeelsnummer = int(value.split()[-1].strip("(").strip(")"))
+                employee = werknemers.get_employee_by_id(personeelsnummer)
+                self.aanwezigen.to_class([employee])
+                self.aanwezigen.save_to_file()
+
                 aanwezigen_listbox.insert(0, value)
 
         def remove():
             value = aanwezigen_listbox.curselection()
             if value:
+                val = aanwezigen_listbox.get(value[0])
+                personeelsnummer = int(val.split()[-1].strip("(").strip(")"))
+                self.aanwezigen.delete_werknemer(personeelsnummer)
                 aanwezigen_listbox.delete(value)
-                self.aanwezigen.pop(value[0])
+                self.aanwezigen.save_to_file()
 
         # Button that adds to listbox
         toevoegen_button = Button(self.frame, text="Toevoegen", command=get)
@@ -176,6 +192,11 @@ class Aanwezigen_Frame:
         aanwezigen_scrollbar.pack(side=RIGHT, fill=BOTH)
         aanwezigen_listbox.config(yscrollcommand=aanwezigen_scrollbar.set)
         aanwezigen_scrollbar.config(command=aanwezigen_listbox.yview)
+
+        if self.aanwezigen.medewerkers:
+            for employee in self.aanwezigen.medewerkers:
+                value = f"{employee.naam} ({employee.personeelsnummer})"
+                aanwezigen_listbox.insert(0, value)
 
     def get(self):
         return self.aanwezigen

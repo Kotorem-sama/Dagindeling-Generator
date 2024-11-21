@@ -44,12 +44,22 @@ class Werknemers:
             if werknemers_list:
                 self.to_class(werknemers_list)
 
+    def get_employee_by_id(self, id):
+        for employee in self.medewerkers:
+            if employee.personeelsnummer == id:
+                return employee
+
     def get_index_by_id(self, id, search_list):
         for i in range(len(search_list)):
             if id == search_list[i].personeelsnummer:
                 return i
 
     def delete_werknemer(self, werknemer, save_file=False):
+        if type(werknemer) == int:
+            werknemer = self.medewerkers[self.get_index_by_id(
+            werknemer, self.medewerkers
+        )]
+        
         personeelsnummer = werknemer.personeelsnummer
 
         del self.medewerkers[self.get_index_by_id(

@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 import json
+from os import makedirs
 
 class json_file:
     def read(path:str):
@@ -16,7 +17,7 @@ class json_file:
     def write(path:str, information):
         """Saves the information given to a provided JSON file"""
         new_path = Path(__file__).parent.parent / path
-        new_path.parent.mkdir(exist_ok=True)
+        new_path.parent.mkdir(exist_ok=True, parents=True)
         data = json.dumps(information)
         new_path.write_text(data)
 
@@ -30,7 +31,7 @@ class csv_file:
 
     def write(path:str, information:list):
         new_path = Path(__file__).parent.parent / path
-        new_path.parent.mkdir(exist_ok=True)
+        new_path.parent.mkdir(exist_ok=True, parents=True)
         with new_path.open("w", encoding="utf-8") as file:
             writer = csv.writer(file, delimiter=';')
             for info in information:
