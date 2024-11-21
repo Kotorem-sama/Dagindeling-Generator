@@ -152,8 +152,10 @@ def generator(ingeplanden:Ingeplanden, locations:Locaties):
     locations.sort("belang")
     index = 0
     priority_list = [ i for i in ingeplanden.medewerkers if
-            i.inwerk_probability != 100 and i not in ingeplanden.absenten ]
-    while len(ingeplanden.inwerkers) > 0 and index < len(locations.open_locaties):
+            i.inwerk_probability != 100 and i not in ingeplanden.absenten
+             and i not in ingeplanden.inwerkers ]
+    while len(ingeplanden.inwerkers) > 0 and index < len(
+        locations.open_locaties) and len(priority_list) > 0:
 
         next_location = locations.open_locaties[index]
         index += 1

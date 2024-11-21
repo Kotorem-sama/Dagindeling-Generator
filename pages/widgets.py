@@ -9,6 +9,7 @@ class SearchableComboBox:
 
     def set(self, value):
         self.set_value = value
+        self.get_value = value
 
     def grid(self, row=0, column=0, columnspan=1):
 

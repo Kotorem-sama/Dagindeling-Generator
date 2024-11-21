@@ -40,6 +40,7 @@ class Dagindeling_Page(Frame):
             options.append(f"{werknemer.naam} ({werknemer.personeelsnummer})")
 
         dagindeling = generator(ingeplanden, locations)
+        changed_dagindeling = {}
         index = 0
 
         for key, values in dagindeling.items():
@@ -51,17 +52,33 @@ class Dagindeling_Page(Frame):
             Label(location_frame, text=location.id).grid(row=0, column=0)
             Label(location_frame, text=location.naam+":").grid(row=0, column=1)
             
-            # StringVar(value=werknemer_box.get())
-            # # werknemer_box = SearchableComboBox(location_frame, options)
-            # werknemer_box.grid(row=0, column=2)
+            listofboxes = []
+            
+            for i in range(3):
+                try:
+                    employee = f"{values[i].naam} ({values[i].personeelsnummer})"
+                except:
+                    employee = ""
 
+                werknemer_box = SearchableComboBox(location_frame, options)
+                werknemer_box.set(employee)
+                werknemer_box.grid(row=0, column=2+i)
+                listofboxes.append(werknemer_box)
 
-            employees = values
+            changed_dagindeling[key] = listofboxes
 
 
 
             index += 1
 
+        def get():
+            for i, j in changed_dagindeling.items():
+                print(i, ", ".join([k.get() for k in j]))
+        
+
+        command=lambda:controller.show_generation_page()
+        terug_button = Button(rightFrame, text="Opslaan", command=get)
+        terug_button.pack()
 
         command=lambda:controller.show_generation_page()
         terug_button = Button(rightFrame, text="Terug", command=command)
