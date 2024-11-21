@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter.font import *
 from tkinter.ttk import Combobox
-from classes.werknemers import Werknemers, Ingeplanden, medewerker_format
+from classes.werknemers import Werknemers, Ingeplanden
 from classes.locaties import Locaties
 from classes.read_files import date as get_date
+from pathlib import *
 
 class SearchableComboBox:
     def __init__(self, frame, options=[]):
@@ -340,7 +341,11 @@ class Generation_Page(Frame):
         label_title = Label(topFrame, text="Genereer Dagindeling",
                             font=title_font)
         label_title.grid(row=0, column=0)
-        # #Add duinrell logo
+        
+        # path = Path(__file__).parent.parent / "data/images/duinrell.jpg"
+        # path = PhotoImage(file = path.absolute())
+        # label1 = Label(topFrame, image=path, highlightbackground="blue", highlightthickness=2)
+        # label1.grid(row=0, column=1)
 
         # Create middle frame for the following frames.
         middleFrame = Frame(self)
