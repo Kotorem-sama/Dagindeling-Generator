@@ -21,7 +21,7 @@ class App(Tk):
             self.frames[F] = frame
             frame.place(x=0, y=0, relwidth=1, relheight=1)
 
-        self.show_frame(Generation_Page)
+        self.show_frame(Dagindeling_Page)
 
     def show_frame(self, context):
         frame = self.frames[context]
