@@ -25,8 +25,9 @@ werknemers.save_to_file()
 locatie_list = Locaties('data/locaties.json')
 locatie_list.save_to_file()
 
-aanwezigen = Ingeplanden("Vandaag.json")
-aanwezigen.to_class(randomise_list(werknemers.to_list()[:], 10))
 dd = Dagindeling()
+dd.load_backup_json()
 print(dd.dagindeling)
+
+
 # aanwezigen.save_to_file()

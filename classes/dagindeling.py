@@ -2,7 +2,7 @@ from classes.werknemers import Ingeplanden, Inwerker
 from classes.locaties import Locaties, Locatie
 from classes.werknemers import Extern_medewerker, Intern_medewerker, Inwerker
 from classes.read_files import date as get_date
-
+from classes.read_files import json_file as jf
 
 class Dagindeling:
     def __init__(self):
@@ -12,8 +12,15 @@ class Dagindeling:
         self.csv = f"dagindelingen/{get_date.get()[0]}.json"
         self.generator()
 
-    def save_backup_json():
-        pass
+    def save_backup_json(self):
+        dagindeling = self.to_list()
+        jf.write(self.json, dagindeling)
+
+    def load_backup_json(self):
+        json_content = jf.read(self.json)
+        self.dagindeling = {}
+        self.inwerkers = {}
+        self.to_class(json_content)
 
     def to_medewerker(self, werknemer):
         if type(werknemer) == dict:
