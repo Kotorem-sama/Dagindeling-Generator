@@ -11,11 +11,11 @@ class SearchableComboBox:
         self.set_value = value
         self.get_value = value
 
-    def grid(self, row=0, column=0, columnspan=1):
+    def grid(self, row=0, column=0, columnspan=1, padx=0):
 
         combo_box = Combobox(self.frame, value=self.options)
         combo_box.set(self.set_value)
-        combo_box.grid(row=row, column=column, columnspan=columnspan)
+        combo_box.grid(row=row, column=column, columnspan=columnspan, padx=padx)
 
         def search(event):
             value = event.widget.get()
