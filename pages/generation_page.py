@@ -209,6 +209,20 @@ class Generation_Page(Frame):
         topFrame = Frame(self)
         topFrame.pack(pady=(50,0))
         
+        def refresh():
+            for widget in middleFrame.winfo_children():
+                widget.destroy()
+
+            # Create aanwezigen frame and add context.
+            aanwezigen_frame = Frame(middleFrame)
+            aanwezigen_frame.place(anchor="c", relx=.33, rely=.5)
+            Aanwezigen_Frame(aanwezigen_frame, self.master)
+
+            # Create gesloten locaties frame and add context.
+            gesloten_locaties_frame = Frame(middleFrame)
+            gesloten_locaties_frame.place(anchor="c", relx=.66, rely=.5)
+            Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
+
         # Genereer dagindeling text.
         title_font = Font(self.master, size=36, weight=BOLD)
         label_title = Label(topFrame, text="Genereer Dagindeling",
@@ -234,8 +248,8 @@ class Generation_Page(Frame):
         bottomFrame = Frame(self)
         bottomFrame.pack(padx=50, pady=(0,50), side=TOP)
 
-        annuleer_button = Button(bottomFrame, text="Annuleren")
-        annuleer_button.pack(side=LEFT, padx=(0,100))
+        terug_button = Button(bottomFrame, text="Terug", command=refresh)
+        terug_button.pack(side=LEFT, padx=(0,100))
 
         genereer_button = Button(bottomFrame, text="Genereren")
         genereer_button.pack(side=RIGHT)
