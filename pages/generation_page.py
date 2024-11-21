@@ -84,6 +84,14 @@ class Gesloten_Locaties_Frame:
 
                 gesloten_locaties_listbox.delete(value)
 
+                opened_text = f"Open Locaties: {len(
+                    self.gesloten_locaties.open_locaties)}"
+                open_label.config(text=opened_text)
+
+                close_text = f"Gesloten Locaties: {len(
+                    self.gesloten_locaties.gesloten_locaties)}"
+                closed_label.config(text=close_text)
+
         # Command for button to add items to listbox.
         def get():
             value = search_gesloten_locaties.get()
@@ -100,6 +108,14 @@ class Gesloten_Locaties_Frame:
 
                     gesloten_locaties_listbox.insert(0, value)
 
+                    opened_text = f"Open Locaties: {len(
+                        self.gesloten_locaties.open_locaties)}"
+                    open_label.config(text=opened_text)
+
+                    close_text = f"Gesloten Locaties: {len(
+                        self.gesloten_locaties.gesloten_locaties)}"
+                    closed_label.config(text=close_text)
+
         # Button that adds to listbox
         button = Button(self.frame, text="Toevoegen", command=get)
         button.grid(row=1, column=1)
@@ -112,7 +128,7 @@ class Gesloten_Locaties_Frame:
         # Creates frame for scrollable listbox
         gesloten_locaties_list = Frame(self.frame, highlightbackground="grey",
                                         highlightthickness=1)
-        gesloten_locaties_list.grid(row=2, column=0, columnspan=3, pady=20)
+        gesloten_locaties_list.grid(row=2, column=0, columnspan=3, pady=(20,0))
 
         # Adds listbox and makes it scrollable
         gesloten_locaties_listbox = Listbox(gesloten_locaties_list, width=50,
@@ -127,7 +143,15 @@ class Gesloten_Locaties_Frame:
         
         # Adds the already closed locations to the list
         for locatie in self.gesloten_locaties.gesloten_locaties:
-            gesloten_locaties_listbox.insert(0, f"{locatie.naam} ({locatie.id})")
+            gesloten_locaties_listbox.insert(0,f"{locatie.naam} ({locatie.id})")
+
+        open_text = f"Open Locaties: {len(self.gesloten_locaties.open_locaties)}"
+        open_label = Label(self.frame, text=open_text)
+        open_label.grid(row=3, column=0, pady=(10, 0))
+
+        closed_text = f"Gesloten Locaties: {len(self.gesloten_locaties.gesloten_locaties)}"
+        closed_label = Label(self.frame, text=closed_text)
+        closed_label.grid(row=3, column=1, pady=(10, 0))
 
     def get(self):
         return self.gesloten_locaties
@@ -167,6 +191,11 @@ class Aanwezigen_Frame:
 
                     aanwezigen_listbox.insert(0, value)
 
+                    total_text = f"Totaal: {len(self.aanwezigen.medewerkers)}"
+                    total_employees_label.config(text=total_text)
+                    inwork_text = f"Inwerkers: {len(self.aanwezigen.inwerkers)}"
+                    total_inwerkers_label.config(text=inwork_text)
+
         def remove():
             value = aanwezigen_listbox.curselection()
             if value:
@@ -175,6 +204,11 @@ class Aanwezigen_Frame:
                 self.aanwezigen.delete_werknemer(personeelsnummer)
                 aanwezigen_listbox.delete(value)
                 self.aanwezigen.save_to_file()
+
+                total_text = f"Totaal: {len(self.aanwezigen.medewerkers)}"
+                total_employees_label.config(text=total_text)
+                inwork_text = f"Inwerkers: {len(self.aanwezigen.inwerkers)}"
+                total_inwerkers_label.config(text=inwork_text)
 
         # Button that adds to listbox
         toevoegen_button = Button(self.frame, text="Toevoegen", command=get)
@@ -188,7 +222,7 @@ class Aanwezigen_Frame:
         # Creates frame for scrollable listbox.
         aanwezigen_list = Frame(self.frame, highlightbackground="grey",
                                 highlightthickness=1)
-        aanwezigen_list.grid(row=2, column=0, columnspan=3, pady=20)
+        aanwezigen_list.grid(row=2, column=0, columnspan=3, pady=(20,0))
 
         # Adds listbox and makes it scrollable
         aanwezigen_listbox = Listbox(aanwezigen_list, width=50, height=20)
@@ -202,6 +236,14 @@ class Aanwezigen_Frame:
             for employee in self.aanwezigen.medewerkers:
                 value = f"{employee.naam} ({employee.personeelsnummer})"
                 aanwezigen_listbox.insert(0, value)
+
+        total_employees_text = f"Totaal: {len(self.aanwezigen.medewerkers)}"
+        total_employees_label = Label(self.frame, text=total_employees_text)
+        total_employees_label.grid(row=3, column=0, pady=(10, 0))
+
+        total_inwerkers_text = f"Inwerkers: {len(self.aanwezigen.inwerkers)}"
+        total_inwerkers_label = Label(self.frame, text=total_inwerkers_text)
+        total_inwerkers_label.grid(row=3, column=1, pady=(10, 0))
 
     def get(self):
         return self.aanwezigen
