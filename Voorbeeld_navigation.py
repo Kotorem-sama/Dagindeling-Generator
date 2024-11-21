@@ -4,6 +4,8 @@ from tkinter.ttk import Combobox
 from classes.werknemers import Werknemers
 from classes.locaties import Locaties
 from pages.generation_page import Generation_Page
+from pages.home_screen import HomeScreen
+from pages.dagindeling_page import Dagindeling_Page
 
 class App(Tk):
     def __init__(self, *args, **kwargs):
@@ -14,7 +16,7 @@ class App(Tk):
 
         self.frames = {}
 
-        for F in (Generation_Page, PageOne, PageTwo, StartPage):
+        for F in (HomeScreen, Generation_Page, Dagindeling_Page, PageOne, PageTwo, StartPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.place(x=0, y=0, relwidth=1, relheight=1)
@@ -23,6 +25,18 @@ class App(Tk):
 
     def show_frame(self, context):
         frame = self.frames[context]
+        frame.tkraise()
+
+    def show_home(self):
+        frame = self.frames[HomeScreen]
+        frame.tkraise()
+
+    def show_generation_page(self):
+        frame = self.frames[Generation_Page]
+        frame.tkraise()
+
+    def show_generated_dagindeling(self):
+        frame = self.frames[Dagindeling_Page]
         frame.tkraise()
 
 class StartPage(Frame):

@@ -376,9 +376,11 @@ class Generation_Page(Frame):
         bottomFrame.pack(padx=50, pady=(0,50), side=TOP)
 
         # Add back button
-        terug_button = Button(bottomFrame, text="Terug")
+        command=lambda:controller.show_home()
+        terug_button = Button(bottomFrame, text="Terug", command=command)
         terug_button.pack(side=LEFT, padx=(0,100))
 
         # Add generate button
-        genereer_button = Button(bottomFrame, text="Genereren")
+        command=lambda:controller.show_generated_dagindeling()
+        genereer_button = Button(bottomFrame, text="Genereren", command=command)
         genereer_button.pack(side=RIGHT)
