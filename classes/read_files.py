@@ -25,7 +25,7 @@ class csv_file:
     def read(path:str):
         new_path = Path(__file__).parent.parent / path
         if new_path.exists():
-            with new_path.open("r", encoding="utf-8", newline="") as file:
+            with new_path.open("r", newline="") as file:
                 reader = csv.reader(file, delimiter=';')
                 return [row for row in reader if row and row[0]]
                 
@@ -33,7 +33,7 @@ class csv_file:
     def write(path:str, information:list):
         new_path = Path(__file__).parent.parent / path
         new_path.parent.mkdir(exist_ok=True, parents=True)
-        with new_path.open("w", encoding="utf-8", newline="") as file:
+        with new_path.open("w", newline="") as file:
             writer = csv.writer(file, delimiter=';')
             writer.writerows(information)
 

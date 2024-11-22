@@ -19,6 +19,7 @@ class Dagindeling:
             self.load_csv()
         else:
             self.generator()
+            self.save_backup_json()
 
     def save_csv(self):
         csv_list = [[ "Locaties", "", "", "", "Inwerkers" ]]
@@ -48,6 +49,8 @@ class Dagindeling:
 
     def load_csv(self):
         werknemers = Werknemers()
+        ingeplanden = Ingeplanden(f"{get_date.get()[0]}_ingeplanden.json")
+
         rows = csv.read(self.csv)
         if not rows:
             return
@@ -59,13 +62,15 @@ class Dagindeling:
             for index in range(3):
                 if not row[1+index] == "":
                     personeelsnummer = row[1+index].split("(")[-1].replace(")", "")
-                    employee = werknemers.get_employee_by_id(int(personeelsnummer))
-                    self.dagindeling[row[0].split(".")[0]].append(employee)
+                    if ingeplanden.is_employee_in_list(int(personeelsnummer)):
+                        employee = werknemers.get_employee_by_id(int(personeelsnummer))
+                        self.dagindeling[row[0].split(".")[0]].append(employee)
                     
             if not row[4] == "":
                 personeelsnummer = row[4].split("(")[-1].replace(")", "")
-                employee = werknemers.get_employee_by_id(int(personeelsnummer))
-                self.inwerkers[row[0].split(".")[0]].append(employee)
+                if ingeplanden.is_employee_in_list(int(personeelsnummer)):
+                    employee = werknemers.get_employee_by_id(int(personeelsnummer))
+                    self.inwerkers[row[0].split(".")[0]].append(employee)
 
     def save_backup_json(self):
         dagindeling = self.to_list()

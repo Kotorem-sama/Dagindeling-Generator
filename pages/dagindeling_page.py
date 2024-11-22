@@ -26,15 +26,14 @@ class Dagindeling_Page(Frame):
                                   font=title_font)
         dagindeling_label.grid(row=0, column=0)
 
-        outcomes_list = []
         ingeplanden = Ingeplanden(f"{get_date.get()[0]}_ingeplanden.json")
         locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
         
-        werknemer_options = []
+        werknemer_options = [""]
         for werknemer in ingeplanden.medewerkers:
             werknemer_options.append(f"{werknemer.naam} ({werknemer.personeelsnummer})")
 
-        inwerker_options = []
+        inwerker_options = [""]
         for inwerker in ingeplanden.inwerkers:
             inwerker_options.append(f"{inwerker.naam} ({inwerker.personeelsnummer})")
 
@@ -77,10 +76,29 @@ class Dagindeling_Page(Frame):
             index += 1
 
         def get():
-            for i, j in changed_dagindeling.items():
-                dagindeling.save_backup_json()
-                print(i, ", ".join([k.get() for k in j]))
-        
+            for key, values in changed_dagindeling.items():
+                dagindeling.dagindeling[int(key)] = []
+                dagindeling.inwerkers[int(key)] = []
+
+                for value in values:
+                    try:
+                        person = value.get()
+                        id = int(person.split()[-1].strip("(").strip(")"))
+                        employee = ingeplanden.get_employee_by_id(id)
+                        dagindeling.dagindeling[int(key)].append(employee)
+                    except:
+                        pass
+                
+                try:
+                    person = changed_inwerkers[int(key)][0].get()
+                    id = int(person.split()[-1].strip("(").strip(")"))
+                    employee = ingeplanden.get_employee_by_id(id)
+                    dagindeling.inwerkers[int(key)].append(employee)
+                except:
+                    pass
+
+            dagindeling.save_csv()
+
         command=lambda:controller.show_generation_page()
         terug_button = Button(rightFrame, text="Opslaan", command=get)
         terug_button.pack()

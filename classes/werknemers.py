@@ -15,7 +15,8 @@ class Werknemers:
 
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
-        of the instance to that file."""
+        of the instance to that file. It pops the ingewerkte locaties and saves
+        them to a seperate csv file."""
 
         if self.path:
             self.sort("personeelsnummer")
