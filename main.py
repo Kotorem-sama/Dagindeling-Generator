@@ -44,6 +44,7 @@ class App(Tk):
     def show_generated_dagindeling(self):
         for widget in self.container.winfo_children():
             widget.destroy()
+        
         self.frames = {}
 
         for F in (HomeScreen, Generation_Page, Dagindeling_Page):
