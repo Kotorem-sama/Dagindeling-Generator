@@ -1,4 +1,5 @@
 from .read_files import json_file as jf
+import os
 
 class Locaties:
     def __init__(self, path:str):
@@ -67,6 +68,12 @@ class Locaties:
             self.locaties.sort()
             self.reverse()
 
+    def delete(self):
+        try:
+            os.remove(self.path)
+        except:
+            pass
+    
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
         of the instance to that file."""

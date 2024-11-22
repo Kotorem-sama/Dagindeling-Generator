@@ -1,3 +1,4 @@
+import os
 from classes.werknemers import Ingeplanden, Inwerker
 from classes.locaties import Locaties, Locatie
 from classes.werknemers import Extern_medewerker, Intern_medewerker, Inwerker, Werknemers
@@ -20,6 +21,20 @@ class Dagindeling:
         else:
             self.generator()
             self.save_backup_json()
+
+    def delete_csv(self):
+        try:
+            os.remove(self.csv)
+        except:
+            pass
+
+    def delete(self):
+        try:
+            os.remove(self.json)
+        except:
+            pass
+
+        self.delete_csv()
 
     def save_csv(self):
         csv_list = [[ "Locaties", "", "", "", "Inwerkers" ]]

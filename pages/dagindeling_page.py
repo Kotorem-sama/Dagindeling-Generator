@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.font import *
+from tkinter import messagebox
 from .widgets import SearchableComboBox
 from classes.werknemers import Ingeplanden
 from classes.read_files import date as get_date
@@ -11,10 +12,10 @@ class Dagindeling_Page(Frame):
         Frame.__init__(self, parent)
         get_date.get()
         
-        topFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
-        middleFrame = Frame(self, highlightbackground="blue", highlightthickness=2)
-        leftFrame = Frame(middleFrame, highlightbackground="black", highlightthickness=2)
-        rightFrame = Frame(middleFrame, highlightbackground="red", highlightthickness=2)
+        topFrame = Frame(self)
+        middleFrame = Frame(self)
+        leftFrame = Frame(middleFrame)
+        rightFrame = Frame(middleFrame)
 
         topFrame.pack(side = TOP)
         middleFrame.pack(fill=BOTH, expand=TRUE)
@@ -75,7 +76,7 @@ class Dagindeling_Page(Frame):
 
             index += 1
 
-        def get():
+        def opslaan():
             for key, values in changed_dagindeling.items():
                 dagindeling.dagindeling[int(key)] = []
                 dagindeling.inwerkers[int(key)] = []
@@ -98,10 +99,37 @@ class Dagindeling_Page(Frame):
                     pass
 
             dagindeling.save_csv()
+            controller.show_generation_page()
 
-        command=lambda:controller.show_generation_page()
-        terug_button = Button(rightFrame, text="Opslaan", command=get)
+        def opnieuw_genereren():
+            message = "Weet u zeker dat u opnieuw wilt genereren?"
+            message2 = message + " De csv wordt hierbij verwijderd."
+            waarschuwing = messagebox.askyesno("Waarschuwing", message2)
+            if waarschuwing:
+                dagindeling.delete_csv()
+                controller.show_generated_dagindeling()
+
+        def verwijderen():
+            message = "Weet u zeker dat u de dagindeling wil verwijderen?"
+            message2 = message + " Alle bestanden van de dag worden verwijderd."
+            waarschuwing = messagebox.askyesno("Waarschuwing", message2)
+            if waarschuwing:
+                dagindeling.delete()
+                ingeplanden.delete()
+                locations.delete()
+                controller.show_generation_page()
+
+
+        terug_button = Button(rightFrame, text="Opslaan", command=opslaan)
         terug_button.pack()
+
+        regerenerate_button = Button(rightFrame, text="Opnieuw genereren",
+                                    command=opnieuw_genereren)
+        regerenerate_button.pack()
+
+        delete_button = Button(rightFrame, text="Verwijderen",
+                                    command=verwijderen)
+        delete_button.pack()
 
         command=lambda:controller.show_generation_page()
         terug_button = Button(rightFrame, text="Terug", command=command)

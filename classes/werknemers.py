@@ -1,6 +1,7 @@
 from .read_files import json_file as jf
 from .read_files import csv_file as csv
 from .locaties import Locaties
+import os
 
 class Werknemers:
     def __init__(self, path='data/werknemers.json'):
@@ -12,6 +13,13 @@ class Werknemers:
         self.retreive_from_file()
         if path != 'data/werknemers.json':
             self.save_to_file()
+    
+    def delete(self):
+        try:
+            os.remove(self.path)
+        except:
+            pass
+        
 
     def save_to_file(self):
         """If the instance has a path bound to it, it will save the data
