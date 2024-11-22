@@ -25,17 +25,17 @@ class csv_file:
     def read(path:str):
         new_path = Path(__file__).parent.parent / path
         if new_path.exists():
-            with new_path.open("r", encoding="utf-8") as file:
+            with new_path.open("r", encoding="utf-8", newline="") as file:
                 reader = csv.reader(file, delimiter=';')
-                return [row for row in reader if row]
+                return [row for row in reader if row and row[0]]
+                
 
     def write(path:str, information:list):
         new_path = Path(__file__).parent.parent / path
         new_path.parent.mkdir(exist_ok=True, parents=True)
-        with new_path.open("w", encoding="utf-8") as file:
+        with new_path.open("w", encoding="utf-8", newline="") as file:
             writer = csv.writer(file, delimiter=';')
-            for info in information:
-                    writer.writerow(info)
+            writer.writerows(information)
 
 class date:
     def get():

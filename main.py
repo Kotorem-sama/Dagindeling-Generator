@@ -26,4 +26,6 @@ locatie_list = Locaties('data/locaties.json')
 locatie_list.save_to_file()
 
 dd = Dagindeling()
+dd.save_csv()
+dd.load_csv()
 print(dd.inwerkers)
