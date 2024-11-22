@@ -2,3 +2,4 @@ data/locaties copy.json
 data/ingeplanden
 classes/__pycache__
 pages/__pycache__
+data/work_date.json
