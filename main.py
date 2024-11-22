@@ -1,31 +1,49 @@
-from classes.werknemers import Werknemers, Ingeplanden
-from classes.locaties import Locaties
-from classes.dagindeling import Dagindeling
-from random import *
 from tkinter import *
+from tkinter.font import *
+from pages.generation_page import Generation_Page
+from pages.home_screen import HomeScreen
+from pages.dagindeling_page import Dagindeling_Page
 
-def randomise_list(given_list:list, total:int):
-    """Returns a randomised list with a set total. Makes sure there are no
-    duplicates and returns None if the list has a smaller size than the total
-    parameter."""
-    if total > len(given_list):
-        return None
-    
-    random_list = []
-    for i in range(total):
-        random_number = randint(0, len(given_list)-1)
-        random_list.append(given_list[random_number])
-        del given_list[random_number]
-    
-    return random_list
+class App(Tk):
+    def __init__(self, *args, **kwargs):
+        Tk.__init__(self, *args, **kwargs)
 
-werknemers = Werknemers()
-werknemers.save_to_file()
+        self.container = Frame(self)
+        self.container.place(x=0, y=0, relwidth=1, relheight=1)
 
-locatie_list = Locaties('data/locaties.json')
-locatie_list.save_to_file()
+        self.frames = {}
 
-dd = Dagindeling()
-dd.save_csv()
-dd.load_csv()
-print(dd.inwerkers)
+        for F in (HomeScreen, Generation_Page, Dagindeling_Page):
+            frame = F(self.container, self)
+            self.frames[F] = frame
+            frame.place(x=0, y=0, relwidth=1, relheight=1)
+
+        self.show_frame(Generation_Page)
+
+    def show_frame(self, context):
+        frame = self.frames[context]
+        frame.tkraise()
+
+    def show_home(self):
+        frame = self.frames[HomeScreen]
+        frame.tkraise()
+
+    def show_generation_page(self):
+        frame = self.frames[Generation_Page]
+        frame.tkraise()
+
+    def show_generated_dagindeling(self):
+        for widget in self.container.winfo_children():
+            widget.destroy()
+        self.frames = {}
+
+        for F in (HomeScreen, Generation_Page, Dagindeling_Page):
+            frame = F(self.container, self)
+            self.frames[F] = frame
+            frame.place(x=0, y=0, relwidth=1, relheight=1)
+        
+        self.show_frame(Dagindeling_Page)
+
+app = App()
+app.geometry("1440x750")
+app.mainloop()
