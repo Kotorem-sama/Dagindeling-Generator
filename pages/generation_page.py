@@ -168,6 +168,7 @@ class Gesloten_Locaties_Frame:
         locatie_list = Locaties('data/locaties.json')
         if not self.gesloten_locaties.locaties:
             self.gesloten_locaties.to_class(locatie_list.to_list())
+            self.gesloten_locaties.save_to_file()
 
 class Aanwezigen_Frame:
     """Class voor de aanwezigen frame om aanwezigen te selecteren en weer te
