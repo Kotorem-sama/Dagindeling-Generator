@@ -212,112 +212,153 @@ class Werknemers:
             self.save_to_file()            
 
     def to_class(self, werknemers:list):
-        """Is used to add a list of dictionaries or a list of
-        Extern_medewerker, Intern_medewerker or Inwerker through
-        the add functions."""
+        """Wordt gebruikt om een lijst met dictionaries of een lijst met
+        Extern_medewerker, Intern_medewerker of Inwerker objecten toe te voegen
+        via de add-functies. Checkt of de item in de lijst een medewerker type
+        is, of een dictionary."""
         
-        for i in werknemers:
-            if type(i) == dict:
-                if not i["intern"]:
-                    self.add_externe_medewerker(i)
-                elif i["inwerker"]:
-                    self.add_inwerker(i)
+        for werknemer in werknemers:
+            if type(werknemer) == dict:
+                if not werknemer["intern"]:
+                    self.add_externe_medewerker(werknemer)
+                elif werknemer["inwerker"]:
+                    self.add_inwerker(werknemer)
                 else:
-                    self.add_interne_medewerker(i)
+                    self.add_interne_medewerker(werknemer)
             else:
-                if type(i) == Extern_medewerker:
-                    self.add_externe_medewerker(i)
-                elif type(i) == Inwerker:
-                    self.add_inwerker(i)
-                elif type(i) == Intern_medewerker:
-                    self.add_interne_medewerker(i)
+                if type(werknemer) == Extern_medewerker:
+                    self.add_externe_medewerker(werknemer)
+                elif type(werknemer) == Inwerker:
+                    self.add_inwerker(werknemer)
+                elif type(werknemer) == Intern_medewerker:
+                    self.add_interne_medewerker(werknemer)
 
     def to_list(self):
-        """Returns a list with dictionaries to make saving to json files
-        easier."""
-
+        """Returnt een lijst met dictionaries, zodat je deze gemakkelijker in
+        JSON-bestanden kunt opslaan."""
         return [medewerker.to_dict() for medewerker in self.medewerkers]
 
-    def to_inwerker(self):
-        pass
-
-    def to_intern(self):
-        pass
-
     def set_sort_by(self, to_set, key):
-        for locatie in to_set:
-            locatie.sorted_by = key
+        """Om een lijst te kunnen sorteren moet er eerst per werknemer het
+        soort sorteren worden gespecificeerd, sinds de lijsten op verschillende
+        manieren gesorteerd kunnen worden."""
+        for employee in to_set:
+            employee.sorted_by = key
 
     def sort(self, key):
+        """Deze functie sorteert de medewerker lijsten op key die wordt mee
+        gegeven. Het kan gesorteerd worden op personeelsnummer en
+        inwerk_probability."""
+
         if key in ["personeelsnummer", "inwerk_probability"]:
+
+            # Eerst wordt voor elke werknemer in elke lijst de manier van
+            # sorteren gewijzigd.
             self.set_sort_by(self.interne_medewerkers, key)
             self.set_sort_by(self.externe_medewerkers, key)
             self.set_sort_by(self.inwerkers, key)
             self.set_sort_by(self.medewerkers, key)
 
+            # Dan wordt de sorteer functie uitgevoerd.
             self.interne_medewerkers.sort()
             self.externe_medewerkers.sort()
             self.inwerkers.sort()
             self.medewerkers.sort()
-            self.reverse()
+
+            # Als de key gelijk is aan inwerk_probability, wordt de lijst
+            # omgedraaid sinds het de bedoeling is dat de hoogste waarde
+            # eerst komt.
+            if key == "inwerk_probability":
+                self.reverse()
 
     def reverse(self):
+        """Een functie om alle lijsten om te draaien."""
         self.interne_medewerkers.reverse()
         self.externe_medewerkers.reverse()
         self.inwerkers.reverse()
         self.medewerkers.reverse()
 
 class Ingeplanden(Werknemers):
-    def __init__(self, path=""):
+    """Een class die werknemers inherit met een standaart path, een eigen manier
+    van opslaan en een lijst voor absenten."""
+
+    def __init__(self, path):
+        """De initialisatie van de Ingeplanden class. Vraagt om een path waar
+        'data/ingeplanden/' wordt toegevoegd sinds dit standaard is."""
         super().__init__("data/ingeplanden/"+path)
         self.absenten = []
 
     def save_to_file(self):
-        """If the instance has a path bound to it, it will save the data
-        of the instance to that file."""
+        """Deze functie slaat de lijst met werknemers op in de JSON-file waar
+        de self.path naar verwijst. Sorteert eerst op personeelsnummer en
+        verwijderd daarna de ingewerkte locaties."""
 
-        if self.path:
-            self.sort("personeelsnummer")
-            self.reverse()
+        self.sort("personeelsnummer")
+        self.reverse()
 
-            werknemers_list = self.to_list()
-            for i in werknemers_list:
-                i.pop('ingewerkte_locaties')
-            jf.write(self.path, werknemers_list)
+        werknemers_list = self.to_list()
+        for werknemer in werknemers_list:
+            werknemer.pop('ingewerkte_locaties')
+        
+        jf.write(self.path, werknemers_list)
 
 class medewerker_format:
-    def __init__(self, intern, inwerker):
-        """Initialise werknemer_format class."""
+    """Een class voor alle medewerkers om te inheritten met een aantal basis
+    dingen zodat de class niet uitmaakt en ik wel de functies kan gebruiken."""
+
+    def __init__(self, intern:bool, inwerker:bool):
+        """medewerker_format wordt geinitialiseerd. Neemt 2 booleans."""
+
         self.personeelsnummer = self.get_new_personeelsnummer()
         self.naam = ""
-        self.ingewerkte_locaties = [] # List of locations the employee is trained for
-        self.voorkeuren = {}  # Dictionary of preferred locations or tasks
-        self.ongeschikte_locaties = []  # List of unsuitable locations
-        self.intern = intern  # Boolean indicating if the employee is internal
-        self.inwerker = inwerker  # Boolean indicating if the employee is a trainer
-        self.fysieke_kracht = 5  # Integer representing physical strength level
-        self.sorted_by = "personeelsnummer"
-        self.inwerk_probability = 0
+        self.ingewerkte_locaties = []
+        self.voorkeuren = {}  # lijst met als key een locatie id en een nummer van 0 tot 10
+        self.ongeschikte_locaties = []
+        self.intern = intern  # Boolean
+        self.inwerker = inwerker  # Boolean
+        self.fysieke_kracht = 5  # Int met een waarde van max 5 minimaal 0
+        self.sorted_by = "personeelsnummer" # Waarmee de vergelijkingen worden gemaakt.
+        self.inwerk_probability = 0 # Int met een waarde van max 100 minimaal 0
     
     def get_ingewerkte_locaties(self, personeelsnummer:int):
+        """Een functie die met een personeelsnummer neemt en kijkt in de
+        ingewerkte locaties csv of de persoon in de lijst staat en waar de
+        persoon is ingewerkt."""
+
         rows = csv.read('data/ingewerkte_locaties.csv')
+
+        # Als het bestand niet is gevonden, wordt een lege lijst terug gestuurd.
         if not rows:
             return []
         
+        # Het bestand start altijd met een rij met kolom kopjes, dus start het
+        # met de eerst volgende rij. Wanneer de persoon is gevonden via de
+        # personeelsnummer, wordt er een lijst aangemaakt genaamd locaties,
+        # omdat de eerste 2 rijen de naam en personeelsnummer bevatten. Ook
+        # wordt er een lijst aangemaakt met ingewerkte locaties.
         for row in rows[1:]:
             if (int(row[0]) == personeelsnummer):
                 locaties:list = row[2:]
                 ingewerkte_locaties = []
 
+                # Als er een 'x' wordt gevonden in de locaties zal de code
+                # hieronder doorgaan totdat er geen 'x' meer in zit. Van elke x
+                # wordt de index gezocht en daarna toegevoegd aan de lijst en
+                # wordt de x veranderd in een lege ruimte zodat de lijst
+                # indexen niet veranderen.
                 while 'x' in locaties:
                     x = locaties.index('x')
                     ingewerkte_locaties.append(x+1)
                     locaties[x] = ''
                 
                 return ingewerkte_locaties
+        # Als het personeelsnummer niet wordt gevonden, wordt een lege lijst
+        # terug gestuurd.
         return []
 
     def get_new_personeelsnummer(self):
+        """Deze functie zoekt door de werknemers.json voor het hoogste
+        personeelsnummer. Returnt de hoogste + 1 of een 1 als het niets vind."""
         werknemers_list = jf.read('data/werknemers.json')
         if werknemers_list:
             return (werknemers_list[-1]["personeelsnummer"] + 1)
@@ -325,20 +366,32 @@ class medewerker_format:
             return 1
     
     def to_class(self, dictionary:dict):
-        self.personeelsnummer = dictionary.get('personeelsnummer',
-                                               self.personeelsnummer)
+        """Neemt een dictionary en verandert het naar een werknemer class.
+        Voegt alle waardes aan zichzelf toe. Als de key niet wordt gevonden
+        in de dictionary blijft de waarde hetzelfde."""
+
+        self.personeelsnummer = dictionary.get(
+            'personeelsnummer', self.personeelsnummer)
+        
         self.naam = dictionary.get('naam', self.naam)
-        self.ingewerkte_locaties = dictionary.get('ingewerkte_locaties',
-                                                  self.get_ingewerkte_locaties(
-                                                      self.personeelsnummer))
+
+        self.ingewerkte_locaties = dictionary.get(
+            'ingewerkte_locaties', self.get_ingewerkte_locaties(
+                self.personeelsnummer))
+        
         self.voorkeuren = dictionary.get('voorkeuren', self.voorkeuren)
-        self.ongeschikte_locaties = dictionary.get('ongeschikte_locaties',
-                                                   self.ongeschikte_locaties)
-        self.fysieke_kracht = dictionary.get('fysieke_kracht',
-                                             self.fysieke_kracht)
+
+        self.ongeschikte_locaties = dictionary.get(
+            'ongeschikte_locaties', self.ongeschikte_locaties)
+        
+        self.fysieke_kracht = dictionary.get(
+            'fysieke_kracht', self.fysieke_kracht)
+        
         self.inwerk_probability = self.get_inwerk_probability()
 
     def to_dict(self):
+        """Verandert de class naar een dictionary om het makkelijker op te
+        slaan als JSON-bestand."""
         return {
             "personeelsnummer" : self.personeelsnummer,
             "naam" : self.naam,
@@ -351,6 +404,7 @@ class medewerker_format:
         }
     
     def __lt__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor kleiner dan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer < other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -359,6 +413,7 @@ class medewerker_format:
             raise ValueError
 
     def __le__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor kleiner dan of gelijk aan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer <= other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -367,6 +422,7 @@ class medewerker_format:
             raise ValueError
 
     def __eq__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor gelijk aan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer == other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -375,6 +431,7 @@ class medewerker_format:
             raise ValueError
 
     def __ne__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor niet gelijk aan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer != other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -383,6 +440,7 @@ class medewerker_format:
             raise ValueError
 
     def __gt__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor groter dan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer > other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -391,6 +449,7 @@ class medewerker_format:
             raise ValueError
 
     def __ge__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor groter dan of gelijk aan."""
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer >= other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -399,20 +458,38 @@ class medewerker_format:
             raise ValueError
 
     def get_inwerk_probability(self):
+        """Een placeholder voor de functie die uitrekent hoe groot de kans is
+        dat je wordt ingedeeld die verschilt per soort medewerker."""
         pass
 
 class Intern_medewerker(medewerker_format):
+    """Een class voor de interne medewerkers die medewerker_format inheritten.
+    Heeft een eigen (ongebruikte) variabele genaamd pity."""
+
     def __init__(self):
+        """De initialisatie van intern_medewerker die een true voor intern
+        terug stuurt naar medewerker_format en een false voor inwerker."""
         super().__init__(True, False)
         self.__pity = 0
 
     def first_pick(self):
+        """Een (ongebruikte) functie die de pity reset naar 0. Zou gebruikt
+        worden wanneer je een voorkeur hebt voor een locatie en daar wordt
+        neergezet."""
         self.__pity = 0
 
     def not_first_pick(self):
+        """Een (ongebruikte) functie die pity omhoog gooit met 1. Zou gebruikt
+        worden wanneer je niet wordt gekozen voor een locatie naar voorkeur,
+        of wordt neergezet bij een locatie met negatieve voorkeurscore."""
         self.__pity += 1
 
     def get_inwerk_probability(self):
+        """Deze functie stuurt een percentage terug van hoe groot de kans op
+        inwerken is. Pakt het totaal aantal locaties, haalt daar de ingewerkte
+        locaties vanaf en deelt dat door het totaal en doet keer 100. Simpel
+        deel/geheel * 100."""
+
         locations = Locaties('data/locaties.json')
 
         total_locations = len(locations.locaties)
@@ -422,17 +499,32 @@ class Intern_medewerker(medewerker_format):
         return locations_to_go / total_locations * 100
 
 class Extern_medewerker(medewerker_format):
+    """Een class voor externe medewerkers die inherrit van medewerker_format."""
     def __init__(self):
+        """De initialisatie van de externe medewerker class. Stuurt een false
+        voor beide inwerker en intern terug naar medewerker_format. Externe
+        medewerkers kunnen geen inwerkers zijn namelijk."""
         super().__init__(False, False)
     
     def get_inwerk_probability(self):
+        """Deze functie stuurt een percentage terug van hoe groot de kans op
+        inwerken is. Als de externe medewerker al is ingewerkt ergens, is er
+        een grote kans dat deze niet meer wordt ingewerkt."""
+
         if self.ingewerkte_locaties:
             return 0
         return 100.0
 
 class Inwerker(medewerker_format):
+    """Een class van inwerkers die inherriten van medewerker_format."""
     def __init__(self):
+        """De initialisatie van de inwerker class. Stuurt een true naar
+        medewerker_format voor beide inwerker en intern, sinds alleen
+        interne medewerkers inwerkers kunnen zijn."""
         super().__init__(True, True)
     
     def get_inwerk_probability(self):
+        """Deze functie stuurt een percentage terug van hoe groot de kans op
+        inwerken is. Stuurt 0 terug sinds inwerkers niet ingewerkt kunnen
+        worden."""
         return 0.0
