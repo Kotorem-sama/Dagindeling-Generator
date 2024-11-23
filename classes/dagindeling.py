@@ -85,9 +85,12 @@ class Dagindeling:
             # Hier wordt gecheckt met dezelfde key (locatie_id) of er inwerkers
             # in de dictionary staan. Zo ja wordt deze toegevoegd aan de lijst,
             # zo nee wordt een lege string toegevoegd.
-            if self.inwerkers[key]:
-                inwerker = self.inwerkers[key][0]
-                line.append(f"{inwerker.naam} ({inwerker.personeelsnummer})")
+            if self.inwerkers[str(key)]:
+                inwerker = self.inwerkers[str(key)][0]
+                try:
+                    line.append(f"{inwerker.naam} ({inwerker.personeelsnummer})")
+                except:
+                    line.append("")
             else:
                 line.append("")
             
@@ -119,8 +122,8 @@ class Dagindeling:
         # dictionary in de dagindeling.
         for row in rows[1:]:
             locatie_id = row[0].split(".")[0]
-            self.dagindeling[locatie_id] = []
-            self.inwerkers[locatie_id] = []
+            self.dagindeling[str(locatie_id)] = []
+            self.inwerkers[str(locatie_id)] = []
 
             # Elke rij bevat 3 kolommen met een werknemer. Hier wordt per
             # kolom gecheckt of de kolom niet leeg is. Zo niet wordt het
@@ -139,7 +142,7 @@ class Dagindeling:
                     # dagindeling.
                     if ingeplanden.is_employee_in_list(id):
                         inwerker = werknemers.get_employee_by_id(id)
-                        self.dagindeling[locatie_id].append(inwerker)
+                        self.dagindeling[str(locatie_id)].append(inwerker)
             
             # Als kolom met index 4 niet leeg is, betekent het dat een inwerker
             # is ingepland. Ook hier wordt het personeelsnummer verkregen door
@@ -155,7 +158,7 @@ class Dagindeling:
                 # dagindeling.
                 if ingeplanden.is_employee_in_list(int(id)):
                     employee = werknemers.get_employee_by_id(int(id))
-                    self.inwerkers[locatie_id].append(employee)
+                    self.inwerkers[str(locatie_id)].append(employee)
 
     def save_backup_json(self):
         """Deze functie slaat de dagindeling op in het JSON-bestand in het
@@ -208,8 +211,8 @@ class Dagindeling:
                     
                     # Als de werknemer ingepland stond om ingewerkt te worden,
                     # wordt de inwerker ook uit de lijst gegooid.
-                    if self.inwerkers[index]:
-                        self.inwerkers[index].pop()
+                    if self.inwerkers[str(index)]:
+                        self.inwerkers[str(index)].pop()
         
         for id, inwerkers in self.dagindeling.items():
             for index in range(len(inwerkers)):
@@ -218,8 +221,8 @@ class Dagindeling:
 
                     # Als de inwerker ingepland stond om in te werken, wordt de
                     # lijst met medewerkers verwijderd.
-                    if self.dagindeling[index]:
-                        self.dagindeling[index] = []
+                    if self.dagindeling[str(index)]:
+                        self.dagindeling[str(index)] = []
 
         # Als laatst wordt de generator aangeroepen om opnieuw de gepopte
         # medewerkers in te plannen waarna het wordt opgeslagen in de csv.
@@ -262,20 +265,20 @@ class Dagindeling:
         # to_medewerker functie en wordt dan toegevoegd aan de dagindeling
         # dictionary.
         for key, value in dagindeling[0].items():
-            self.dagindeling[key] = []
+            self.dagindeling[str(key)] = []
             for person in value:
                 employee = self.to_medewerker(person)
-                self.dagindeling[key].append(employee)
+                self.dagindeling[str(key)].append(employee)
         
         # Elke key is een personeelsnummer en elke value is een lijst met een
         # inwerker dictionary die omgezet wordt in een inwerker via de
         # to_medewerker functie en wordt dan toegevoegd aan de dagindeling
         # dictionary.
         for key, value in dagindeling[1].items():
-            self.dagindeling[key] = []
+            self.dagindeling[str(key)] = []
             for person in value:
                 employee = self.to_medewerker(person)
-                self.dagindeling[key].append(employee)
+                self.dagindeling[str(key)].append(employee)
 
     def to_list(self):
         """Deze functie zet de dagindeling en inwerkers dictionaries met
@@ -287,7 +290,7 @@ class Dagindeling:
         # Voor elke key (locatie id) in de dagindeling wordt de key toegevoegd
         # aan de nieuwe dictionary.
         for key, value in self.dagindeling.items():
-            dict_dagindeling[key] = []
+            dict_dagindeling[str(key)] = []
 
             # Voor elke werknemer in value (lijst met werknemers) wordt de
             # werknemer omgezet in een werknemer dictionary en toegevoegd aan
@@ -296,14 +299,14 @@ class Dagindeling:
             for person in value:
                 employee = person.to_dict()
                 del employee["ingewerkte_locaties"]
-                dict_dagindeling[key].append(employee)
+                dict_dagindeling[str(key)].append(employee)
 
         dict_inwerkers = {}
 
         # Voor elke key (locatie id) in de inwerkers dictionary wordt de key
         # toegevoegd aan de nieuwe dictionary.
         for key, value in self.dagindeling.items():
-            dict_inwerkers[key] = []
+            dict_inwerkers[str(key)] = []
 
             # Voor elke inwerker in value (lijst van werknemers) wordt de
             # inwerker omgezet in een inwerker dictionary en toegevoegd aan de
@@ -312,7 +315,7 @@ class Dagindeling:
             for person in value:
                 employee = person.to_dict()
                 del employee["ingewerkte_locaties"]
-                dict_inwerkers[key].append(employee)
+                dict_inwerkers[str(key)].append(employee)
 
         # Een lijst van de 2 dictionaries wordt terug gestuurd.
         return [dict_dagindeling, dict_inwerkers]
@@ -415,7 +418,7 @@ class Dagindeling:
             # gelijk aan het minimum is, wordt de locatie overgeslagen.
             if minimum_or_maximum:
                 minimum = location.minimale_medewerkers
-                if len(dagindeling[location.id]) >= minimum:
+                if len(dagindeling[str(location.id)]) >= minimum:
                     continue
             
             # Als de boolean False is wordt er gekeken naar de maximum
@@ -423,7 +426,7 @@ class Dagindeling:
             # gelijk aan het maximum, wordt de locatie overgeslagen.
             else:
                 maximum = location.maximale_medewerkers
-                if len(dagindeling[location.id]) >= maximum:
+                if len(dagindeling[str(location.id)]) >= maximum:
                     continue
             
             # Er wordt gezocht naar medewerkers die zijn ingewerkt op de
@@ -438,7 +441,7 @@ class Dagindeling:
             # locatie. Als er niemand meer overblijft, wordt de locatie
             # overgeslagen.
             lower_fysical_power = self.get_lower_fysical_power(
-                possibilities,location)
+                possibilities, location)
             remaining = [ employee for employee in possibilities if employee not
                          in lower_fysical_power ]
             if not remaining:
@@ -456,7 +459,7 @@ class Dagindeling:
             # De werknemer wordt verwijderd uit de ingeplanden lijst en
             # toegevoegd aan de dagindeling.
             ingeplanden.delete_werknemer(employee)
-            dagindeling[location.id].append(employee)
+            dagindeling[str(location.id)].append(employee)
 
         return dagindeling
 
@@ -498,23 +501,23 @@ class Dagindeling:
         locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
         ingeplanden.sort("inwerk_probability")
 
-        # Checkt per ingeplande werknemer of ze al in de dagindeling staan.
-        # Zo ja worden ze verwijderd.
-        for employees in self.dagindeling.values():
-            for index in range(len(employees)):
-                ingeplanden.delete_werknemer(employees[index])
+        # # Checkt per ingeplande werknemer of ze al in de dagindeling staan.
+        # # Zo ja worden ze verwijderd van de ingeplanden lijst.
+        # for employees in self.dagindeling.values():
+        #     for index in range(len(employees)):
+        #         ingeplanden.delete_werknemer(employees[index])
 
-        # Checkt per ingeplande inwerker of ze al in de dagindeling staan.
-        # Zo ja worden ze verwijderd.
-        for inwerkers in self.inwerkers.values():
-            for index in range(len(inwerkers)):
-                ingeplanden.delete_werknemer(inwerkers[index])
+        # # Checkt per ingeplande inwerker of ze al in de dagindeling staan.
+        # # Zo ja worden ze verwijderd van de ingeplanden lijst.
+        # for inwerkers in self.inwerkers.values():
+        #     for index in range(len(inwerkers)):
+        #         ingeplanden.delete_werknemer(inwerkers[index])
 
         # Per locatie wordt er in de dictionaries voor medewerkers en inwerkers
         # een lijst aangemaakt met als key de locatie id.
         for location in locations.open_locaties:
-            self.dagindeling[location.id] = []
-            self.inwerkers[location.id] = []
+            self.dagindeling[str(location.id)] = []
+            self.inwerkers[str(location.id)] = []
 
         # Maakt een lijst met alle nieuwe werknemers.
         priority_list = [ employee for employee in ingeplanden.medewerkers if
@@ -545,8 +548,8 @@ class Dagindeling:
 
                 # Hier word per locatie de inwerker ingedeeld en de nieuwe
                 # werknemer.
-                self.dagindeling[location].extend([employee])
-                self.inwerkers[location] = [inwerker]
+                self.dagindeling[str(location)].extend([employee])
+                self.inwerkers[str(location)] = [inwerker]
         
         # Sorteert de locaties lijst op moeilijkheidsgraad, en zorgt ervoor dat
         # de makkelijkste locaties vooraan komen te staan.
@@ -562,13 +565,13 @@ class Dagindeling:
             # Als de volgende locatie nog niet met maximale bemanning staat,
             # wordt er 1 toegevoegd bij de index.
             next_location = locations.open_locaties[index]
-            if not len(self.dagindeling[next_location.id]) <= (
+            if not len(self.dagindeling[str(next_location.id)]) <= (
                 next_location.maximale_medewerkers):
                 index += 1
 
             # Als de dagindeling op de volgende locatie geen medewerkers heeft
             # ingepland, wordt er een nieuwe medewerker toegevoegd.
-            if len(self.dagindeling[next_location.id]) < (
+            if len(self.dagindeling[str(next_location.id)]) < (
                 next_location.maximale_medewerkers):
                 employee = priority_list.pop(0)
                 ingeplanden.delete_werknemer(employee)
@@ -576,12 +579,12 @@ class Dagindeling:
                 # Als er al een inwerker staat ingedeeld ingepland, wordt alleen
                 # de nieuwe medewerker toegevoegd aan de dagindeling. Anders
                 # wordt er een nieuwe inwerker gepakt en die ingedeeld.
-                if self.inwerkers[next_location.id]:
-                    self.dagindeling[next_location.id].extend([employee])
+                if self.inwerkers[str(next_location.id)]:
+                    self.dagindeling[str(next_location.id)].extend([employee])
                 else:
                     inwerker = self.get_inwerker(ingeplanden)
-                    self.inwerkers[next_location.id] = [inwerker]
-                    self.dagindeling[next_location.id].extend([employee])
+                    self.inwerkers[str(next_location.id)] = [inwerker]
+                    self.dagindeling[str(next_location.id)].extend([employee])
 
         # Als er nog inwerkers over zijn, worden de personen met de hoogste
         # inwerk kans als eerste ingepland. De locaties worden gesorteerd op
@@ -599,7 +602,7 @@ class Dagindeling:
 
             # Als het maximum medewerkers nog niet is bereikt, wordt er een
             # medewerker ingepland.
-            if len(self.dagindeling[next_location.id]) < (
+            if len(self.dagindeling[str(next_location.id)]) < (
                 next_location.maximale_medewerkers):
                 employee = priority_list.pop(0)
                 ingeplanden.delete_werknemer(employee)
@@ -607,12 +610,12 @@ class Dagindeling:
                 # Als er al een inwerker staat ingedeeld ingepland, wordt alleen
                 # de nieuwe medewerker toegevoegd aan de dagindeling. Anders
                 # wordt er een nieuwe inwerker gepakt en die ingedeeld.
-                if self.inwerkers[next_location.id]:
-                    self.dagindeling[next_location.id].extend([employee])
+                if self.inwerkers[str(next_location.id)]:
+                    self.dagindeling[str(next_location.id)].extend([employee])
                 else:
                     inwerker = self.get_inwerker(ingeplanden)
-                    self.inwerkers[next_location.id] = [inwerker]
-                    self.dagindeling[next_location.id].extend([employee])
+                    self.inwerkers[str(next_location.id)] = [inwerker]
+                    self.dagindeling[str(next_location.id)].extend([employee])
 
         # Als laatste worden alle overgebleven medewerkers ingedeeld via de
         # schedule_rest_employees functie. Inwerkers gaan als eerst. Er wordt nu

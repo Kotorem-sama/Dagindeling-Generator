@@ -150,8 +150,8 @@ class Dagindeling_Page(Frame):
             # Voor elk item in de changed_dagindeling dictionary pakt deze
             # forloop de waarde van de geselecteerden.
             for key, values in changed_dagindeling.items():
-                dagindeling.dagindeling[int(key)] = []
-                dagindeling.inwerkers[int(key)] = []
+                dagindeling.dagindeling[str(key)] = []
+                dagindeling.inwerkers[str(key)] = []
 
                 # Deze for loop checkt of de comboboxes in de lijst een
                 # persoon bevatten. Gaat door wanneer dit niet zo is. Gebruikt
@@ -162,7 +162,7 @@ class Dagindeling_Page(Frame):
                         person = value.get()
                         id = int(person.split()[-1].strip("(").strip(")"))
                         employee = ingeplanden.get_employee_by_id(id)
-                        dagindeling.dagindeling[int(key)].append(employee)
+                        dagindeling.dagindeling[str(key)].append(employee)
                     except:
                         pass
                 
@@ -170,10 +170,10 @@ class Dagindeling_Page(Frame):
                 # het niet de werknemer kan vinden met lege id integer, maar
                 # voegt de inwerker toe aan de dagindeling als deze is gevonden.
                 try:
-                    person = changed_inwerkers[int(key)][0].get()
+                    person = changed_inwerkers[str(key)][0].get()
                     id = int(person.split()[-1].strip("(").strip(")"))
                     employee = ingeplanden.get_employee_by_id(id)
-                    dagindeling.inwerkers[int(key)].append(employee)
+                    dagindeling.inwerkers[str(key)].append(employee)
                 except:
                     pass
             
