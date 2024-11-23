@@ -5,6 +5,8 @@ from classes.locaties import Locaties
 from classes.read_files import date as get_date
 from pathlib import *
 from .widgets import SearchableComboBox
+from classes.read_files import csv_file as csv
+from classes.dagindeling import Dagindeling
 
 class Gesloten_Locaties_Frame:
     """Class voor de gesloten locaties frame om locaties te selecteren en
@@ -253,6 +255,15 @@ class Aanwezigen_Frame:
                 # Verwijdert de werknemer van de listbox.
                 aanwezigen_listbox.delete(value)
 
+                # Checkt eerst of er een csv voor de dagindeling is opgeslagen.
+                # Verwijderd daarna de medewerker van de lijst als hij bestaat
+                # en als hij in de lijst staat.
+                path = f"dagindelingen/{get_date.get()[0]}.csv"
+                if csv.path_exists(path):
+                    dagindeling = Dagindeling()
+                    dagindeling.delete_medewerker(personeelsnummer)
+
+
                 # Past het totaal aantal werknemers aan zodat het klopt met
                     # alle werknemers die geselecteerd zijn in de listbox.
                 total_text = f"Totaal: {len(self.aanwezigen.medewerkers)}"
@@ -435,7 +446,7 @@ class Generation_Page(Frame):
                             font=title_font)
         label_title.grid(row=0, column=0)
 
-        # Creeer de frame die in het midden staat.
+        # Creeert de frame die in het midden staat.
         middleFrame = Frame(self)
         middleFrame.pack(fill=BOTH, expand=True, padx=20, pady=20)
 
@@ -445,7 +456,7 @@ class Generation_Page(Frame):
         date_frame.place(anchor="c", relx=.25, rely=.5)
         date = Date_Frame(date_frame, self.master)
         
-        # Creety een frame binnen de date_frame frame om deze gecentreerd weer
+        # Creert een frame binnen de date_frame frame om deze gecentreerd weer
         # te geven.
         buttonFrame = Frame(date_frame)
         buttonFrame.grid(row=2, column=1, pady=20)

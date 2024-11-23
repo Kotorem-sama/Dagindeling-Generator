@@ -22,6 +22,14 @@ class json_file:
             return information
         else:
             return None
+        
+    def path_exists(path:str):
+        """Returnt een boolean die aangeeft of een pad bestaat."""
+        
+        new_path = Path(__file__).parent.parent / path
+        if new_path.exists():
+            return True
+        return False
     
     def write(path:str, information):
         """Slaat de meegegeven informatie op in een JSON-bestand via een
@@ -74,6 +82,14 @@ class csv_file:
         with new_path.open("w", newline="") as file:
             writer = csv.writer(file, delimiter=';')
             writer.writerows(information)
+        
+    def path_exists(path:str):
+        """Returnt een boolean die aangeeft of een pad bestaat."""
+        
+        new_path = Path(__file__).parent.parent / path
+        if new_path.exists():
+            return True
+        return False
 
 class date:
     """Een class die de werk_datum, ookwel de geselecteerde datum, uitleest uit

@@ -2,7 +2,7 @@ import os
 from classes.werknemers import Ingeplanden, Inwerker
 from classes.locaties import Locaties, Locatie
 from classes.werknemers import Extern_medewerker, Intern_medewerker
-from classes.werknemers import Werknemers, Inwerker
+from classes.werknemers import Werknemers, Inwerker, medewerker_format
 from classes.read_files import date as get_date
 from classes.read_files import json_file as jf
 from classes.read_files import csv_file as csv
@@ -176,6 +176,36 @@ class Dagindeling:
             self.dagindeling = {}
             self.inwerkers = {}
             self.to_class(json_content)
+
+    def delete_medewerker(self, id:int):
+        """Deze functie verwijderd eerst de employee met dezelfde id in de
+        dagindeling lijst en daarna checkt het de inwerkers lijst. Als laatst
+        wordt de generator getriggerd en wordt het bestand weer opgeslagen."""
+        for id, employees in self.dagindeling.items():
+            for index in range(len(employees)):
+                if employees[index].personeelsnummer == id:
+                    employees.pop(index)
+                    
+                    # Als de werknemer ingepland stond om ingewerkt te worden,
+                    # wordt de inwerker ook uit de lijst gegooid.
+                    if self.inwerkers[index]:
+                        self.inwerkers[index].pop()
+        
+        for id, inwerkers in self.dagindeling.items():
+            for index in range(len(inwerkers)):
+                if inwerkers[index].personeelsnummer == id:
+                    inwerkers.pop(index)
+
+                    # Als de inwerker ingepland stond om in te werken, wordt de
+                    # lijst met medewerkers verwijderd.
+                    if self.dagindeling[index]:
+                        self.dagindeling[index] = []
+
+        # Als laatst wordt de generator aangeroepen om opnieuw de gepopte
+        # medewerkers in te plannen waarna het wordt opgeslagen in de csv.
+        self.generator()
+        self.save_csv()
+
 
     def to_medewerker(self, werknemer:dict):
         """Deze functie wordt gebruikt om een dictionary variant van een
