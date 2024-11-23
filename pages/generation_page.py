@@ -71,6 +71,13 @@ class Gesloten_Locaties_Frame:
                 # Verwijdert de locatie uit de listbox.
                 gesloten_locaties_listbox.delete(value)
 
+                # Checkt of de dagindeling csv is opgeslagen. Zo ja, opent het
+                # de locatie in de csv.
+                path = f"dagindelingen/{get_date.get()[0]}.csv"
+                if csv.path_exists(path):
+                    dagindeling = Dagindeling()
+                    dagindeling.open_locatie(locatie_id)
+
                 # Past het aantal locaties die geopend zijn aan naar het nieuwe
                 # aantal geopende locaties.
                 opened_text = f"Open Locaties: {len(
@@ -232,6 +239,15 @@ class Aanwezigen_Frame:
 
                     # Voegt de werknemer toe aan de aanwezigen listbox.
                     aanwezigen_listbox.insert(0, value)
+                    
+                    # Checkt of de dagindeling is opgeslagen in een csv bestand.
+                    # Zo ja, gooit het de generator opnieuw aan om de nieuwe
+                    # werknemer in te delen en wordt de csv opgeslagen.
+                    path = f"dagindelingen/{get_date.get()[0]}.csv"
+                    if csv.path_exists(path):
+                        dagindeling = Dagindeling()
+                        dagindeling.generator()
+                        dagindeling.save_csv()
 
                     # Past het totaal aantal werknemers aan zodat het klopt met
                     # alle werknemers die geselecteerd zijn in de listbox.

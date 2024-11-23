@@ -176,10 +176,18 @@ class Dagindeling:
             self.inwerkers = {}
             self.to_class(json_content)
 
-    def sluit_locatie(self, id:int):
+    def open_locatie(self, id):
+        """Deze functie opent een locatie en voegt voor beide de werknemers en
+        de inwerkers een nieuwe lijst met die locatie id."""
+        self.dagindeling[str(id)] = []
+        self.inwerkers[str(id)] = []
+
+        self.generator()
+        self.save_csv()
+
+    def sluit_locatie(self, id):
         """Deze functie sluit een locatie, verwijderd de dagindeling voor beide
         de werknemers en de inwerkers en roept dan de generator op."""
-
         del self.dagindeling[str(id)]
         del self.inwerkers[str(id)]
 
@@ -490,10 +498,14 @@ class Dagindeling:
         locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
         ingeplanden.sort("inwerk_probability")
 
+        # Checkt per ingeplande werknemer of ze al in de dagindeling staan.
+        # Zo ja worden ze verwijderd.
         for employees in self.dagindeling.values():
             for index in range(len(employees)):
                 ingeplanden.delete_werknemer(employees[index])
 
+        # Checkt per ingeplande inwerker of ze al in de dagindeling staan.
+        # Zo ja worden ze verwijderd.
         for inwerkers in self.inwerkers.values():
             for index in range(len(inwerkers)):
                 ingeplanden.delete_werknemer(inwerkers[index])
