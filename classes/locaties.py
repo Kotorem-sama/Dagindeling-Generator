@@ -208,8 +208,14 @@ class Locaties:
         return [locatie.to_dict() for locatie in self.locaties]
 
 class Locatie:
-    """Een """
-    def __init__(self, categorie):
+    """Een class voor alle locaties om te inheritten met een aantal basis
+    methods en attributes zodat de functies gelijk blijven over de
+    verschillende locatie classes."""
+
+    def __init__(self, categorie:str):
+        """De initialisatie van de locatie class. Neem een string voor de
+        categorie aan."""
+
         self.id = 0
         self.naam = ""
         self.categorie = categorie
@@ -223,6 +229,11 @@ class Locatie:
         self.sorted_by = "id"
 
     def __lt__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor kleiner dan. Kijkt naar self.sorted en zoekt voor id,
+        moeilijkheidsgraad, belang of fysieke_kracht om met een van de 4 te
+        vergelijken."""
+
         if self.sorted_by == "id":
             return self.id < other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -235,6 +246,11 @@ class Locatie:
             raise ValueError
 
     def __le__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor kleiner dan of gelijk aan. Kijkt naar self.sorted en zoekt voor
+        id, moeilijkheidsgraad, belang of fysieke_kracht om met een van de 4 te
+        vergelijken."""
+
         if self.sorted_by == "id":
             return self.id <= other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -247,6 +263,11 @@ class Locatie:
             raise ValueError
 
     def __eq__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor gelijk aan. Kijkt naar self.sorted en zoekt voor id,
+        moeilijkheidsgraad, belang of fysieke_kracht om met een van de 4 te
+        vergelijken."""
+
         if self.sorted_by == "id":
             return self.id == other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -259,6 +280,11 @@ class Locatie:
             raise ValueError
 
     def __ne__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor niet gelijk aan. Kijkt naar self.sorted en zoekt voor id,
+        moeilijkheidsgraad, belang of fysieke_kracht om met een van de 4 te
+        vergelijken."""
+
         if self.sorted_by == "id":
             return self.id != other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -271,6 +297,11 @@ class Locatie:
             raise ValueError
 
     def __gt__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit
+        staat voor groter dan. Kijkt naar self.sorted en zoekt voor id,
+        moeilijkheidsgraad, belang of fysieke_kracht om met een van
+        de 4 te vergelijken."""
+
         if self.sorted_by == "id":
             return self.id > other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -283,6 +314,11 @@ class Locatie:
             raise ValueError
 
     def __ge__(self, other):
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit
+        staat voor groter dan of gelijk aan. Kijkt naar self.sorted en zoekt
+        voor id, moeilijkheidsgraad, belang of fysieke_kracht om met een van
+        de 4 te vergelijken."""
+
         if self.sorted_by == "id":
             return self.id >= other.id
         elif self.sorted_by == "moeilijkheidsgraad":
@@ -295,17 +331,36 @@ class Locatie:
             raise ValueError
 
     def to_class(self, dictionary:dict):
+        """Neemt een dictionary en verandert het naar een locatie class.
+        Voegt alle waardes aan zichzelf toe. Als de key niet wordt gevonden
+        in de dictionary blijft de waarde hetzelfde."""
+
         self.id = dictionary.get('id', self.id)
+
         self.naam = dictionary.get('naam', self.naam)
+
         self.groep = dictionary.get('groep', self.groep)
-        self.minimale_medewerkers = dictionary.get('minimale_medewerkers', self.minimale_medewerkers)
-        self.maximale_medewerkers = dictionary.get('maximale_medewerkers', self.maximale_medewerkers)
-        self.moeilijkheidsgraad = dictionary.get('moeilijkheidsgraad', self.moeilijkheidsgraad)
-        self.beschikbaarheid = dictionary.get('beschikbaarheid', self.beschikbaarheid)
+
+        self.minimale_medewerkers = dictionary.get(
+            'minimale_medewerkers', self.minimale_medewerkers)
+        
+        self.maximale_medewerkers = dictionary.get(
+            'maximale_medewerkers', self.maximale_medewerkers)
+        
+        self.moeilijkheidsgraad = dictionary.get(
+            'moeilijkheidsgraad', self.moeilijkheidsgraad)
+        
+        self.beschikbaarheid = dictionary.get(
+            'beschikbaarheid', self.beschikbaarheid)
+        
         self.belang = dictionary.get('belang', self.belang)
-        self.fysieke_kracht = dictionary.get('fysieke_kracht', self.fysieke_kracht)
+
+        self.fysieke_kracht = dictionary.get(
+            'fysieke_kracht', self.fysieke_kracht)
 
     def to_dict(self):
+        """Verandert de class naar een dictionary om het makkelijker op te
+        slaan als JSON-bestand."""
         return {
             "id": self.id,
             "naam": self.naam,
@@ -320,9 +375,17 @@ class Locatie:
         }
     
 class Attractie(Locatie):
+    """Een class voor de attracties die inherrit van de locatie class."""
+
     def __init__(self):
+        """De initialisatie van de attractie class. Stuurt als categorie
+        'attractie' naar de locatie class"""
         super().__init__("attractie")
 
 class Winkel(Locatie):
+    """Een class voor de winkels die inherrit van de locatie class."""
+
     def __init__(self):
+        """De initialisatie van de winkel class. Stuurt als categorie
+        'winkel' naar de locatie class"""
         super().__init__("winkel")

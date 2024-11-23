@@ -304,7 +304,8 @@ class Ingeplanden(Werknemers):
 
 class medewerker_format:
     """Een class voor alle medewerkers om te inheritten met een aantal basis
-    dingen zodat de class niet uitmaakt en ik wel de functies kan gebruiken."""
+    methods en attributes zodat de class niet uitmaakt en je wel de functies
+    kan gebruiken."""
 
     def __init__(self, intern:bool, inwerker:bool):
         """medewerker_format wordt geinitialiseerd. Neemt 2 booleans."""
@@ -404,7 +405,10 @@ class medewerker_format:
         }
     
     def __lt__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor kleiner dan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor kleiner dan. Kijkt naar self.sorted en zoekt voor personeelsnummer
+        of inwerk_probability om met een van de 2 te vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer < other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -413,7 +417,11 @@ class medewerker_format:
             raise ValueError
 
     def __le__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor kleiner dan of gelijk aan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor kleiner dan of gelijk aan. Kijkt naar self.sorted en zoekt voor
+        personeelsnummer of inwerk_probability om met een van de 2 te
+        vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer <= other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -422,7 +430,10 @@ class medewerker_format:
             raise ValueError
 
     def __eq__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor gelijk aan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor gelijk aan. Kijkt naar self.sorted en zoekt voor personeelsnummer
+        of inwerk_probability om met een van de 2 te vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer == other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -431,7 +442,11 @@ class medewerker_format:
             raise ValueError
 
     def __ne__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor niet gelijk aan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat
+        voor niet gelijk aan. Kijkt naar self.sorted en zoekt voor
+        personeelsnummer of inwerk_probability om met een van de 2 te
+        vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer != other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -440,7 +455,11 @@ class medewerker_format:
             raise ValueError
 
     def __gt__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor groter dan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit
+        staat voor groter dan. Kijkt naar self.sorted en zoekt voor
+        personeelsnummer of inwerk_probability om met een van de 2 te
+        vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer > other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
@@ -449,7 +468,11 @@ class medewerker_format:
             raise ValueError
 
     def __ge__(self, other):
-        """Een dunder om andere objecten te vergelijken met zichzelf. Dit staat voor groter dan of gelijk aan."""
+        """Een dunder om andere objecten te vergelijken met zichzelf. Dit
+        staat voor groter dan of gelijk aan. Kijkt naar self.sorted en zoekt
+        voor personeelsnummer of inwerk_probability om met een van de 2 te
+        vergelijken."""
+
         if self.sorted_by == "personeelsnummer":
             return self.personeelsnummer >= other.personeelsnummer
         elif self.sorted_by == "inwerk_probability":
