@@ -108,6 +108,13 @@ class Gesloten_Locaties_Frame:
                     # Voegt de locatie toe aan de listbox
                     gesloten_locaties_listbox.insert(0, value)
 
+                    # Als het CSV-bestand voor de dagindeling al bestaat, wordt
+                    # deze ingeladen en wordt de locatie ook hier gesloten.
+                    path = f"dagindelingen/{get_date.get()[0]}.csv"
+                    if csv.path_exists(path):
+                        dagindeling = Dagindeling()
+                        dagindeling.sluit_locatie(locatie_id)
+
                     # Past het aantal locaties die geopend zijn aan naar het
                     # nieuwe aantal geopende locaties.
                     opened_text = f"Open Locaties: {len(
@@ -261,7 +268,7 @@ class Aanwezigen_Frame:
                 path = f"dagindelingen/{get_date.get()[0]}.csv"
                 if csv.path_exists(path):
                     dagindeling = Dagindeling()
-                    dagindeling.delete_medewerker(personeelsnummer)
+                    dagindeling.absentie_medewerker(personeelsnummer)
 
 
                 # Past het totaal aantal werknemers aan zodat het klopt met

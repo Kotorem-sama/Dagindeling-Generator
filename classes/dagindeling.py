@@ -27,8 +27,7 @@ class Dagindeling:
         geladen. Zo nee runt het de generator en wordt deze opgeslagen in
         de backup_json."""
 
-        file_check = csv.read(self.csv)
-        if file_check:
+        if csv.path_exists(self.csv):
             self.load_csv()
         else:
             self.generator()
@@ -177,10 +176,23 @@ class Dagindeling:
             self.inwerkers = {}
             self.to_class(json_content)
 
-    def delete_medewerker(self, id:int):
-        """Deze functie verwijderd eerst de employee met dezelfde id in de
-        dagindeling lijst en daarna checkt het de inwerkers lijst. Als laatst
-        wordt de generator getriggerd en wordt het bestand weer opgeslagen."""
+    def sluit_locatie(self, id:int):
+        """Deze functie sluit een locatie, verwijderd de dagindeling voor beide
+        de werknemers en de inwerkers en roept dan de generator op."""
+
+        del self.dagindeling[str(id)]
+        del self.inwerkers[str(id)]
+
+        self.generator()
+        self.save_csv()
+
+    def absentie_medewerker(self, id:int):
+        """Deze functie verwijderd absente medewerkers van de dagindeling en de
+        inwerkers lijst. Verwijderd eerst de employee met hetzelfde
+        personeelsnummer in de dagindeling lijst waarna het de inwerkers lijst
+        checkt. Als laatst wordt de generator opgeroepen en wordt het bestand
+        weer opgeslagen."""
+
         for id, employees in self.dagindeling.items():
             for index in range(len(employees)):
                 if employees[index].personeelsnummer == id:
@@ -204,8 +216,7 @@ class Dagindeling:
         # Als laatst wordt de generator aangeroepen om opnieuw de gepopte
         # medewerkers in te plannen waarna het wordt opgeslagen in de csv.
         self.generator()
-        self.save_csv()
-
+        self.save_csv()        
 
     def to_medewerker(self, werknemer:dict):
         """Deze functie wordt gebruikt om een dictionary variant van een
@@ -478,6 +489,14 @@ class Dagindeling:
         ingeplanden = Ingeplanden(f"{get_date.get()[0]}_ingeplanden.json")
         locations = Locaties(f"data/ingeplanden/{get_date.get()[0]}_locaties.json")
         ingeplanden.sort("inwerk_probability")
+
+        for employees in self.dagindeling.values():
+            for index in range(len(employees)):
+                ingeplanden.delete_werknemer(employees[index])
+
+        for inwerkers in self.inwerkers.values():
+            for index in range(len(inwerkers)):
+                ingeplanden.delete_werknemer(inwerkers[index])
 
         # Per locatie wordt er in de dictionaries voor medewerkers en inwerkers
         # een lijst aangemaakt met als key de locatie id.

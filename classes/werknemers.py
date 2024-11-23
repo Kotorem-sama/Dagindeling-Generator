@@ -104,13 +104,17 @@ class Werknemers:
     def delete_werknemer(self, werknemer):
         """Verwijdert een werknemer uit de class lijsten. Als een id wordt
         meegegeven wordt de werknemer verwijderd met die personeelsnummer."""
-        if type(werknemer) == int:
-            werknemer = self.medewerkers[self.get_index_by_id(
-            werknemer, self.medewerkers
-        )]
-        
-        # Selecteert personeelsnummer
-        personeelsnummer = werknemer.personeelsnummer
+        try:
+
+            if type(werknemer) == int:
+                werknemer = self.medewerkers[self.get_index_by_id(
+                werknemer, self.medewerkers
+            )]
+            
+            # Selecteert personeelsnummer
+            personeelsnummer = werknemer.personeelsnummer
+        except:
+            pass
 
         # Probeert de werknemer uit de medewerkers lijst te verwijderen.
         try:
