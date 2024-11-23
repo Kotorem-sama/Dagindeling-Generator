@@ -185,6 +185,10 @@ class Dagindeling:
         self.dagindeling[str(id)] = []
         self.inwerkers[str(id)] = []
 
+        # Sorteert de werknemers en inwerkers dagindeling dictionaries.
+        self.dagindeling = sorted(self.dagindeling)
+        self.inwerkers = sorted(self.inwerkers)
+
         self.generator()
         self.save_csv()
 
