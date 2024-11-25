@@ -7,6 +7,7 @@ from pathlib import *
 from .widgets import SearchableComboBox
 from classes.read_files import csv_file as csv
 from classes.dagindeling import Dagindeling
+from tkinter import messagebox
 
 class Gesloten_Locaties_Frame:
     """Class voor de gesloten locaties frame om locaties te selecteren en
@@ -462,6 +463,9 @@ class Generation_Page(Frame):
 
                 # Voegt alle widgets weer toe aan de gesloten locaties frame.
                 Gesloten_Locaties_Frame(gesloten_locaties_frame, self.master)
+            else:
+                message = "Deze datum is incorrect. Probeer opnieuw."
+                messagebox.showerror("Foute datum", message=message)
 
         # Creeert de titel dat lees Dagindeling Instellingen. Heeft eigen font.
         title_font = Font(self.master, size=36, weight=BOLD)
